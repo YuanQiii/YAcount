@@ -1,0 +1,9 @@
+<text bindtap="login">登录</text>
+<text bindtap="handleLogout">登出</text>
+<text>{{userInfo.nickName}}</text>
+
+<view>
+  <van-dialog id="mine-dialog" />
+  <van-notify id="mine-notify" />
+</view>
+
