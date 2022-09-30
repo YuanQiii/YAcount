@@ -5,11 +5,12 @@
     "pages/record/record",
     "pages/mine/mine"
   ],
+
   "window": {
-    "backgroundColor": "#F6F6F6",
+    "backgroundColor": "#FFF",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarBackgroundColor": "#FFFF",
+    "navigationBarTitleText": "Keep-Booking",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",
@@ -28,7 +29,7 @@
     },
     {
       "pagePath": "pages/record/record",
-      "text": "记录",
+      "text": "记账",
       "iconPath": "images/tabbar/add.png",
       "selectedIconPath": "images/tabbar/addactive.png"
     },

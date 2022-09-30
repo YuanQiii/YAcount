@@ -57,8 +57,7 @@ exports.main = async (event, context) => {
     return rdmString;
   }
 
-  // let token = `${genRandomString(32)}_Expired_${new Date().getTime() + 86400 * 30}`
-  let token = `${genRandomString(32)}_Expired_${new Date().getTime() + 1000}`
+  let token = `${genRandomString(32)}_Expired_${new Date().getTime() + 86400 * 30}`
   return {
     token
   }

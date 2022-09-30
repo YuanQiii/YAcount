@@ -1,6 +1,8 @@
 // app.js
+import {callCloudFunction} from './utils/cloud_helper'
+
 App({
-  onLaunch: function () {
+  onLaunch: async function () {
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库以使用云能力');
     } else {
@@ -12,8 +14,24 @@ App({
         // env: 'my-env-id',
         traceUser: true,
       });
+
+      var categoriesList = []
+      await callCloudFunction('getCategoriesList').then(res => {
+        let arr0 = []
+        let arr1 = []
+        res.result.arr.map(ele => {
+          if(ele.mode){
+            arr1.push(ele)
+          }else{
+            arr0.push(ele)
+          }
+        })
+        categoriesList = [arr0, arr1]
+      })
     }
 
-    this.globalData = {};
+    this.globalData = {
+      categoriesList
+    };
   }
 });

@@ -1,3 +1,7 @@
 <!--pages/chart/chart.wxml-->
 <text>pages/chart/chart.wxml</text>
 
+<view>
+  <van-dialog id="chart-dialog" />
+  <van-notify id="chart-notify" />
+</view>

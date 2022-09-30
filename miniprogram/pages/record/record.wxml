@@ -1,2 +1,99 @@
-<!--pages/record/record.wxml-->
-<text>pages/record/record.wxml</text>
+<!-- pages/record/record.wxml -->
+<view class="record">
+  <view class="tab">
+    <!-- 方式 -->
+    <van-tabs swipeable animated sticky bind:change="handleTabChange">
+      <van-tab title="支出">
+        <view class="categories" style="{{height}}" bindtap='handleSelectCategory'>
+          <view style="opacity: {{loading ? 0 : 1}}">
+            <van-grid column-num="5">
+              <van-grid-item icon="photo-o" text="{{item.name}}" data-index="{{index+1}}" wx:for="{{ categoriesList0 }}" />
+            </van-grid>
+          </view>
+        </view>
+      </van-tab>
+      <van-tab title="收入">
+        <view class="categories" style="{{height}}" bindtap='handleSelectCategory'>
+          <view style="opacity: {{loading ? 0 : 1}}">
+            <van-grid column-num="5">
+              <van-grid-item icon="photo-o" text="{{item.name}}" data-index="{{index+1}}" wx:for="{{ categoriesList1 }}" />
+            </van-grid>
+          </view>
+        </view>
+      </van-tab>
+    </van-tabs>
+  </view>
+  <!-- 金额 -->
+  <view class="bill">
+    <view>￥</view>
+    <van-field value="{{ num }}" type="digit" />
+  </view>
+  <view class="note">
+    <view class="note-container">
+      <view bindtap='handleAddNote'>添加备注</view>
+      <view bindtap='handleAddDate'>{{currentDate}} {{currentWeek}}</view>
+    </view>
+  </view>
+  <!-- 数字键盘 -->
+  <view class="key-container">
+    <view class="keyboard" bindtap="handleKeyPress">
+      <view class="key-row">
+        <view class="key-cell" data-num="7">7</view>
+        <view class="key-cell" data-num="8">8</view>
+        <view class="key-cell" data-num="9">9</view>
+        <view class="key-cell" data-num=""></view>
+      </view>
+      <view class="key-row">
+        <view class="key-cell" data-num="4">4</view>
+        <view class="key-cell" data-num="5">5</view>
+        <view class="key-cell" data-num="6">6</view>
+        <view class="key-cell" data-num=""></view>
+      </view>
+      <view class="key-row">
+        <view class="key-cell" data-num="1">1</view>
+        <view class="key-cell" data-num="2">2</view>
+        <view class="key-cell" data-num="3">3</view>
+        <view class="key-cell" data-num=""></view>
+      </view>
+      <view class="key-row">
+        <view class="key-cell" data-num=".">.</view>
+        <view class="key-cell" data-num="0">0</view>
+        <view class="key-cell" data-num="D">删除</view>
+        <view class="key-cell" data-num=""></view>
+      </view>
+      <view class="key-clear" data-num="C">清空</view>
+      <view class="key-confirm" data-num="S">确定</view>
+    </view>
+  </view>
+  <!-- 提示以及对话框 -->
+  <view>
+    <van-dialog id="record-dialog" />
+    <van-notify id="record-notify" />
+    <view style="display: {{loading ? 'flex' : 'none'}}" class="loading">
+      <van-loading color="#1989fa" />
+    </view>
+    <van-popup show="{{ popupNoteShow }}" round position="bottom" custom-style="height: 60%">
+      <view class="popup-top">
+        <view class="popup-top-left" bindtap='handlePopupNoteClose'>取消</view>
+        <view>请输入备注</view>
+        <view class="popup-top-right" bindtap='handlePopupNoteSubmit'>确认</view>
+      </view>
+      <view class="popup-container">
+        <van-field value="{{ note }}" placeholder="请输入备注（0-15）" bind:change="handleNoteChange" clearable maxlength="{{15}}" />
+      </view>
+    </van-popup>
+    <van-popup show="{{ popupDateShow }}" round position="bottom" custom-style="height: 40%">
+      <van-datetime-picker title='账单时间' type="date" value="{{ billInfo.billDate }}" min-date="{{minDate}}" max-date="{{ maxDate }}" formatter="{{ formatter }}" bind:cancel="handleCancelDate" bind:confirm="handleConfirmDate" />
+    </van-popup>
+    <van-popup show="{{ popupAddShow }}" round position="bottom" custom-style="height: 30%">
+      <view class="add-conteiner">
+        <view>
+          <van-icon name="checked" color="green" />
+        </view>
+        <view bindtap='handleAddAgain'>再记一笔</view>
+        <view bindtap='handleToDetail'>查看流水</view>
+        <view bindtap='handleAddAgain'>关闭</view>
+      </view>
+    </van-popup>
+  </view>
+</view>

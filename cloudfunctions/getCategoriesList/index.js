@@ -8,6 +8,12 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   let userData = ''
   let arr = []
+  let categories = []
+  let names = []
+
+  cloud.database().collection('category').get().then(res => {
+    names = res.data
+  })
 
   // 根据用户的opneid获取用户信息
   await cloud.database().collection('user').where({
@@ -22,8 +28,21 @@ exports.main = async (event, context) => {
   await cloud.database().collection('categories_list').where({
     _id: userData[0].categories
   }).get().then(res => {
-    arr = res.data[0].categories
+    categories = res.data[0].categories
   })
+
+  categories.forEach(ele1 => {
+    names.forEach(ele2 => {
+      if(ele1 === ele2.name){
+        arr.push({
+          name: ele1,
+          mode: ele2.mode
+        })
+      }
+    })
+  })
+
+
 
   return {
     arr,

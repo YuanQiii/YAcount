@@ -1,18 +1,264 @@
 // pages/record/record.js
+import { callCloudFunction } from '../../utils/cloud_helper'
+import { formatDate } from '../../utils/format_date'
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    mode: 0,
+    num: '123',
+    categoriesList0: [],
+    categoriesList1: [],
+    categoryIndex: 1,
+    loading: true,
+    height: '',
+    popupNoteShow: false,
+    popupDateShow: false,
+    popupAddShow: false,
+    note: '',
+    currentDate: formatDate(new Date().getTime(), 'YY-MM-DD'),
+    currentWeek: null,
+    maxDate: new Date().getTime(),
+    minDate: new Date('1990-01-01').getTime(),
+    formatter(type, value) {
+      if (type === 'year') {
+        return `${value}年`;
+      }
+      if (type === 'month') {
+        return `${value}月`;
+      }
+      return value;
+    },
+    billInfo: {
+      recordDate: null,
+      billDate: new Date().getTime(),
+      amount: 0,
+      category: null,
+      mode: null,
+      note: '',
+    }
   },
+
+  getCurrentWeek(datetime) {
+    let arr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
+    this.setData({
+      currentWeek: arr[new Date(datetime).getUTCDay()]
+    })
+  },
+
+  handleTabChange(e) {
+    this.setData({
+      mode: e.detail.index
+    })
+  },
+
+  handleKeyPress(e) {
+    const num = e.target.dataset.num; // 点击的那个键盘代表值，即上面data-num嵌入的自定义数据，D：删除，C：清空，S：确认，‘’：无效，0-9：数字
+    // 不同按键处理逻辑
+    // '' 代表无效按键，直接返回
+    if (num === '') return false;
+    switch (String(num)) {
+      // 删除键
+      case 'D':
+        this.handleDeleteKey();
+        break;
+      // 清空键
+      case 'C':
+        this.handleClearKey();
+        break;
+      // 确认键
+      case 'S':
+        this.handleConfirmKey();
+        break;
+      default:
+        this.handleNumberKey(num);
+        break;
+    }
+  },
+
+  // 处理删除键
+  handleDeleteKey() {
+    const S = this.data.num; // 因为上面mounted()函数赋值，这个值已经是父组件点击的那个输入框的值了，当点击了数字键盘上的数字后，它也会发生变化的
+    // 如果没有输入（或者长度为0），直接返回
+    if (!S.length) return false;
+    // 否则删除最后一个
+    this.setData({
+      num: S.substring(0, S.length - 1)
+    })
+  },
+  // 处理清空键
+  handleClearKey() {
+    this.setData({
+      num: ''
+    })
+  },
+  // 处理数字
+  handleNumberKey(num) {
+
+    let temp = this.data.num + num
+
+    if (num === '.' && this.data.num === '') {
+      this.setData({
+        num: '0.'
+      })
+    }
+    if (num === '.' && this.data.num.includes('.')) return
+
+    if (temp.split('.')[0].length > 7) {
+      console.log('超过最大值');
+      return
+    }
+    if (temp.includes('.') && temp.split('.')[1].length > 2) return
+
+    this.setData({
+      num: temp
+    })
+  },
+  // 确认键
+  handleConfirmKey() {
+    let amount = Number(this.data.num)
+    if (amount !== 0) {
+      this.setData({
+        ['billInfo.recordDate']: new Date().getTime(),
+        ['billInfo.mode']: this.data.mode,
+        ['billInfo.amount']: amount,
+        ['billInfo.category']: this.data.categoryIndex
+      })
+      console.log(this.data.billInfo)
+      callCloudFunction('addBill', this.data.billInfo).then(res => {
+        if(res){
+          this.setData({
+            popupAddShow: true
+          })
+        }
+      })
+    }
+  },
+
+  handleCategoriesContainenrHeight() {
+    wx.getSystemInfo({
+      success: res => {
+        let tabbarHeight = res.screenHeight - res.safeArea.bottom + 50
+        let height = res.screenHeight - tabbarHeight - 50
+
+        this.setData({
+          height: `height: ${height}rpx`,
+        })
+        console.log(this.data.height)
+        console.log(this.data.screenWidth)
+      }
+    })
+  },
+
+  handleSelectCategory(e) {
+    this.setData({
+      categoryIndex: e.target.dataset.index,
+    })
+  },
+
+  handleAddNote() {
+    this.setData({
+      popupNoteShow: true
+    })
+  },
+
+  handlePopupNoteClose() {
+    this.setData({
+      popupNoteShow: false
+    })
+  },
+
+  handlePopupNoteSubmit() {
+    this.setData({
+      popupNoteShow: false,
+      note: ''
+    })
+  },
+
+  handleNoteChange(e) {
+    this.setData({
+      note: e.detail
+    })
+  },
+
+  handleAddDate() {
+    this.setData({
+      popupDateShow: true
+    })
+  },
+
+  handlePopupDateClose() {
+    this.setData({
+      popupDateShow: false
+    })
+  },
+
+
+  handleCancelDate() {
+    this.setData({
+      popupDateShow: false
+    })
+  },
+
+  handleConfirmDate(e) {
+    this.setData({
+      popupDateShow: false,
+      currentDate: formatDate(e.detail, 'YY-MM-DD'),
+      ['billInfo.billDate']: e.detail,
+    })
+
+    this.getCurrentWeek(e.detail)
+  },
+
+  handleAddAgain() {
+    this.setData({
+      num: '',
+      popupAddShow: false
+    })
+  },
+
+  handleToDetail() {
+    this.setData({
+      num: '',
+      popupAddShow: false
+    })
+    wx.switchTab({
+      url: '/pages/detail/detail'
+    })
+  },
+
+  handleCategories(arr){
+    let arr0 = []
+    let arr1 = []
+    arr.map(ele => {
+      if(ele.mode){
+        arr1.push(ele)
+      }else{
+        arr0.push(ele)
+      }
+    })
+    return [arr0, arr1]
+  },
+
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    this.setData({
+      categoriesList0: getApp().globalData.categoriesList[0],
+      categoriesList1: getApp().globalData.categoriesList[1]
+    })
+    this.handleCategoriesContainenrHeight()
+    this.getCurrentWeek(new Date())
+    setTimeout(() => {
+      this.setData({
+        loading: false
+      })
+    }, 1500)
   },
 
   /**

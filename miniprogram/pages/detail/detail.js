@@ -13,9 +13,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    callCloudFunction('getCategoriesList').then(res => {
-      console.log(res)
-    })
+
   },
 
   /**
@@ -50,7 +48,6 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
-
   },
 
   /**

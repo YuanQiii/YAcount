@@ -1,3 +1,7 @@
 <!--pages/detail/detail.wxml-->
 <text>pages/detail/detail.wxml</text>
-<van-dialog id="detail-dialog" />
+<view>
+  <van-dialog id="detail-dialog" />
+  <van-notify id="detail-notify" />
+</view>
+
