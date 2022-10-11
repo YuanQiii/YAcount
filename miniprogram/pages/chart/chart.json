@@ -1,6 +1,12 @@
 {
   "usingComponents": {
     "van-dialog": "@vant/weapp/dialog/index",
-    "van-notify": "@vant/weapp/notify/index"
+    "van-notify": "@vant/weapp/notify/index",
+    "ec-canvas": "../../ec-canvas/ec-canvas",
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index",
+    "van-popup": "@vant/weapp/popup/index",
+    "van-datetime-picker": "@vant/weapp/datetime-picker/index",
+    "van-progress": "@vant/weapp/progress/index"
   }
 }

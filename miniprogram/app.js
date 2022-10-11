@@ -1,5 +1,5 @@
 // app.js
-import {callCloudFunction} from './utils/cloud_helper'
+import { callCloudFunction } from './utils/cloud_helper'
 
 App({
   onLaunch: async function () {
@@ -20,9 +20,9 @@ App({
         let arr0 = []
         let arr1 = []
         res.result.arr.map(ele => {
-          if(ele.mode){
+          if (ele.mode) {
             arr1.push(ele)
-          }else{
+          } else {
             arr0.push(ele)
           }
         })

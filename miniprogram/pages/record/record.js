@@ -1,4 +1,4 @@
-// pages/record/record.js
+// pages/record/record.jscategoryName
 import { callCloudFunction } from '../../utils/cloud_helper'
 import { formatDate } from '../../utils/format_date'
 
@@ -9,10 +9,11 @@ Page({
    */
   data: {
     mode: 0,
-    num: '123',
+    num: '',
     categoriesList0: [],
     categoriesList1: [],
-    categoryIndex: 1,
+    categoryName0: '三餐',
+    categoryName1: '工资',
     loading: true,
     height: '',
     popupNoteShow: false,
@@ -39,7 +40,9 @@ Page({
       category: null,
       mode: null,
       note: '',
-    }
+    },
+    billId: '',
+    isUpdate: false
   },
 
   getCurrentWeek(datetime) {
@@ -83,7 +86,7 @@ Page({
   handleDeleteKey() {
     const S = this.data.num; // 因为上面mounted()函数赋值，这个值已经是父组件点击的那个输入框的值了，当点击了数字键盘上的数字后，它也会发生变化的
     // 如果没有输入（或者长度为0），直接返回
-    if (!S.length) return false;
+    if (!S.length) return fal1221se;
     // 否则删除最后一个
     this.setData({
       num: S.substring(0, S.length - 1)
@@ -114,8 +117,9 @@ Page({
     if (temp.includes('.') && temp.split('.')[1].length > 2) return
 
     this.setData({
-      num: temp
+      num: temp,
     })
+
   },
   // 确认键
   handleConfirmKey() {
@@ -125,16 +129,34 @@ Page({
         ['billInfo.recordDate']: new Date().getTime(),
         ['billInfo.mode']: this.data.mode,
         ['billInfo.amount']: amount,
-        ['billInfo.category']: this.data.categoryIndex
+        ['billInfo.note']: this.data.note,
+        ['billInfo.category']: this.data.mode ? this.data.categoryName1 : this.data.categoryName0
       })
       console.log(this.data.billInfo)
-      callCloudFunction('addBill', this.data.billInfo).then(res => {
-        if(res){
-          this.setData({
-            popupAddShow: true
-          })
-        }
-      })
+      if (this.data.isUpdate) {
+        this.setData({
+          ['billInfo._id']: this.data.billId,
+        })
+
+        console.log(this.data.billInfo)
+
+        callCloudFunction('updateBill', this.data.billInfo).then(res => {
+          if (res) {
+            this.setData({
+              popupAddShow: true,
+            })
+          }
+        })
+      } else {
+        callCloudFunction('addBill', this.data.billInfo).then(res => {
+          if (res) {
+            this.setData({
+              popupAddShow: true,
+            })
+          }
+        })
+      }
+
     }
   },
 
@@ -147,15 +169,14 @@ Page({
         this.setData({
           height: `height: ${height}rpx`,
         })
-        console.log(this.data.height)
-        console.log(this.data.screenWidth)
       }
     })
   },
 
   handleSelectCategory(e) {
+    let dataset = e.currentTarget.dataset
     this.setData({
-      categoryIndex: e.target.dataset.index,
+      [`categoryName${dataset.mode}`]: dataset.name,
     })
   },
 
@@ -167,14 +188,14 @@ Page({
 
   handlePopupNoteClose() {
     this.setData({
-      popupNoteShow: false
+      popupNoteShow: false,
+      note: ''
     })
   },
 
   handlePopupNoteSubmit() {
     this.setData({
-      popupNoteShow: false,
-      note: ''
+      popupNoteShow: false
     })
   },
 
@@ -230,19 +251,18 @@ Page({
     })
   },
 
-  handleCategories(arr){
+  handleCategories(arr) {
     let arr0 = []
     let arr1 = []
     arr.map(ele => {
-      if(ele.mode){
+      if (ele.mode) {
         arr1.push(ele)
-      }else{
+      } else {
         arr0.push(ele)
       }
     })
     return [arr0, arr1]
   },
-
 
   /**
    * 生命周期函数--监听页面加载
@@ -259,6 +279,24 @@ Page({
         loading: false
       })
     }, 1500)
+    if (Object.keys(options).length) {
+      this.setData({
+        isUpdate: true,
+        num: options.amount,
+        mode: options.mode,
+        note: options.note,
+        billId: options._id,
+        ['billInfo.billDate']: new Date(options.bill_date).getTime(),
+        [`categoryName${options.mode}`]: options.category,
+        currentDate: formatDate(options.bill_date, 'YY-MM-DD'),
+        currentWeek: this.getCurrentWeek(options.bill_date)
+      })
+      console.log(options)
+    } else {
+      this.setData({
+        isUpdate: false
+      })
+    }
   },
 
   /**
@@ -272,7 +310,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
-
   },
 
   /**

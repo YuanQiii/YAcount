@@ -1,1 +1,103 @@
 /* pages/detail/detail.wxss */
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.current-date {
+    display: flex;
+    width: 100%;
+    background-color: aqua;
+    height: 70rpx;
+    line-height: 70rpx;
+}
+
+.current-amount {
+    display: flex;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    background-color: antiquewhite;
+    height: 70rpx;
+    line-height: 70rpx;
+}
+
+.bill-item-top {
+    display: flex;
+    justify-content: space-between;
+    background-color: sandybrown;
+}
+
+.bill-item-top-amount {
+    display: flex;
+}
+
+.bill-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20rpx;
+    margin-top: 10rpx;
+    border-bottom: solid 2rpx gray;
+}
+
+.amount {
+    display: flex;
+}
+
+.mode-amount {
+    display: flex;
+}
+
+.amount-num {
+    text-align: right;
+}
+
+.detail-popup {
+    position: relative;
+}
+
+.detail-tabs {
+    width: 70vw;
+    margin: auto;
+}
+
+.detail-btn {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.detail-btn-item1 {
+    margin-left: 30rpx;
+    margin-top: 20rpx;
+}
+
+.detail-btn-item2 {
+    margin-right: 30rpx;
+    margin-top: 20rpx;
+}
+
+.detail-picker {
+    padding-top: 50rpx;
+}
+
+.popup-datetime {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup-datetime-range {
+    display: flex;
+    margin-top: 50rpx;
+}
+
+.popup-detetime-btn {
+    text-align: center;
+    margin-top: 80rpx;
+}

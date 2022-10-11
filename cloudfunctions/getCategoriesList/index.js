@@ -6,17 +6,19 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
+  const db = cloud.database()
+
   let userData = ''
   let arr = []
   let categories = []
   let names = []
 
-  cloud.database().collection('category').get().then(res => {
+  db.collection('category').get().then(res => {
     names = res.data
   })
 
   // 根据用户的opneid获取用户信息
-  await cloud.database().collection('user').where({
+  await db.collection('user').where({
     openid: wxContext.OPENID
   }).get().then(res => {
     userData = res.data
@@ -25,7 +27,7 @@ exports.main = async (event, context) => {
   })
 
   // 获取用户分类列表
-  await cloud.database().collection('categories_list').where({
+  await db.collection('categories_list').where({
     _id: userData[0].categories
   }).get().then(res => {
     categories = res.data[0].categories
@@ -33,7 +35,7 @@ exports.main = async (event, context) => {
 
   categories.forEach(ele1 => {
     names.forEach(ele2 => {
-      if(ele1 === ele2.name){
+      if (ele1 === ele2.name) {
         arr.push({
           name: ele1,
           mode: ele2.mode

@@ -2,31 +2,53 @@
 <view class="record">
   <view class="tab">
     <!-- 方式 -->
-    <van-tabs swipeable animated sticky bind:change="handleTabChange">
-      <van-tab title="支出">
-        <view class="categories" style="{{height}}" bindtap='handleSelectCategory'>
+    <van-tabs active="{{mode}}" swipeable animated sticky bind:change="handleTabChange">
+      <van-tab name="0" title="支出">
+        <view class="categories" style="{{height}}">
           <view style="opacity: {{loading ? 0 : 1}}">
-            <van-grid column-num="5">
-              <van-grid-item icon="photo-o" text="{{item.name}}" data-index="{{index+1}}" wx:for="{{ categoriesList0 }}" />
-            </van-grid>
+          
+            <view class='category-container'>
+              <view class="category-box {{categoryName0 === item.name ? 'select' : '' }}" bindtap='handleSelectCategory' data-mode='0' data-name='{{item.name}}' data-index='{{index+1}}' wx:for="{{ categoriesList0 }}">
+                <view bindtap='handleSelectCategory'>
+                    <van-icon name="like" />
+                </view>
+                <view bindtap='handleSelectCategory'>
+                    {{item.name}}
+                </view>
+              </view>
+            </view>
+
           </view>
         </view>
       </van-tab>
-      <van-tab title="收入">
+      <van-tab name="1" title="收入">
         <view class="categories" style="{{height}}" bindtap='handleSelectCategory'>
           <view style="opacity: {{loading ? 0 : 1}}">
-            <van-grid column-num="5">
-              <van-grid-item icon="photo-o" text="{{item.name}}" data-index="{{index+1}}" wx:for="{{ categoriesList1 }}" />
-            </van-grid>
+            <view class='category-container'>
+              <view class="category-box {{categoryName1 === item.name ? 'select' : '' }}" bindtap='handleSelectCategory' data-mode='1' data-name='{{item.name}}' data-index='{{index+1}}' wx:for="{{ categoriesList1 }}">
+                <view bindtap='handleSelectCategory'>
+                    <van-icon name="like" />
+                </view>
+                <view bindtap='handleSelectCategory'>
+                    {{item.name}}
+                </view>
+              </view>
+            </view>
           </view>
         </view>
       </van-tab>
     </van-tabs>
   </view>
   <!-- 金额 -->
-  <view class="bill">
-    <view>￥</view>
-    <van-field value="{{ num }}" type="digit" />
+  <view class="bill" style="color: {{mode == 1 ? 'green' : 'red'}}">
+    <view class='bill-icon'>￥</view>
+    <view class='bill-input'></view>
+    <view class='bill-input-text'>
+    <view class=''>
+    {{num}}
+    </view>
+    <view class='bill-input-cursor'></view></view>
+    
   </view>
   <view class="note">
     <view class="note-container">

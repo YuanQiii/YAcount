@@ -1,0 +1,51 @@
+<view>
+    <view>
+        {{info.category}}
+    </view>
+    <view>
+        <view wx:if='{{info.mode}}' >
+            +{{info.amount}}
+        </view>
+        <view wx:else>
+            -{{info.amount}}
+        </view>
+    </view>
+    <view>
+        <view>
+            账单时间：
+        </view>
+        <view>
+            {{info.bill_date}}
+        </view>
+    </view>
+    <view>
+        <view>
+            记录时间：
+        </view>
+        <view>
+            {{info.record_date}}
+        </view>
+    </view>
+    <view>
+        <view>
+            备注：
+        </view>
+        <view>
+            {{info.note}}
+        </view>
+    </view>
+      
+    <view>
+        <view bindtap='handleUpdate'>
+            编辑
+        </view>
+        <view bindtap='handleDelete'>
+            删除
+        </view>
+          
+          
+    </view>
+      
+      
+</view>
+  

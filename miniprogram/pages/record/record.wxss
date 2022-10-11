@@ -167,7 +167,6 @@
 .loading {
     width: 100vw;
     height: 100vh;
-    opacity: 0;
     position: absolute;
     top: 0;
     left: 0;
@@ -176,4 +175,76 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.bill {
+    margin-top: 10rpx;
+}
+
+
+.bill-icon {
+    position: absolute;
+    font-size: 50rpx;
+    top: -10rpx;
+    left: 20rpx;
+}
+
+.bill-input {
+    width: 100vw;
+    height: 70rpx;
+    opacity: .5;
+    position: absolute;
+}
+
+.bill-input-text {
+    position: absolute;
+    left: 70rpx;
+    top: -15rpx;
+    font-size: 70rpx;
+    /* border: solid 3rpx red; */
+    display: flex;
+    align-items: center;
+}
+
+.bill-input-cursor {
+    width: 5rpx;
+    height: 70rpx;
+    background-color: gray;
+    display: inline-block;
+    margin-left: 10rpx;
+    animation: blink 1s steps(1) infinite;
+    -webkit-animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+.category-container {
+    padding: 10rpx;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    font-size: 26rpx;
+}
+
+.category-box {
+    display: flex;
+    flex: 0 0 20%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 150rpx;
+}
+
+.select {
+    box-shadow: 0 0 5px #333;
 }

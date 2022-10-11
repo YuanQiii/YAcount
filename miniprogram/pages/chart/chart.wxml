@@ -1,5 +1,128 @@
 <!--pages/chart/chart.wxml-->
-<text>pages/chart/chart.wxml</text>
+<view class='current-date'>
+  <view wx:if="{{startDateZH != '1990-01'}}">
+    {{startDateZH}}
+  </view>
+  <view wx:if="{{startDateZH != '1990-01'}}">
+    -
+  </view>
+    
+  <view>
+    {{endDateZH}}
+  </view>
+    
+  <view bindtap='handleOpenPopup'>
+    +
+  </view>
+</view>
+
+<view>
+  <van-tabs swipeable active="{{ modeActive }}" bind:change="handleTabChange">
+    <van-tab name='0' title='支出'>
+      <view class="container">
+        <ec-canvas id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
+      </view>
+      <view class='chart-progress'>
+        <view class='chart-progress-item' wx:for='{{billData0}}'>
+          <view class='chart-progress-top'>
+            <view>
+              {{item.name}}
+            </view>
+            <view>
+              {{item.value}}
+            </view>
+          </view>
+          <view>
+            <van-progress percentage="{{item.rate}}" />
+          </view>
+        </view>
+      </view>
+        
+    </van-tab>
+    <van-tab name='1' title='收入'>内容 2</van-tab>
+  </van-tabs>
+</view>
+
+<view class='detail-popup'>
+  <van-popup
+  show="{{ popupShow }}"
+  close-on-click-overlay='true'
+  bind:click-overlay='handleOverlay'
+  position="bottom"
+  round
+  custom-style="height: 50%;">
+    <view class='detail-tabs'>
+      <van-tabs animated swipeable active="{{ dateActive }}" bind:change='handleDateChange'  >
+        <van-tab name="0" title="年月份">
+          <view class='detail-picker' >
+            <van-datetime-picker
+              type="year-month"
+              value="{{ endDatetime }}"
+              min-date="{{ minDate }}"
+              max-date="{{ maxDate }}"
+              bind:input='handleDateInput'
+              />
+          </view>
+        </van-tab>
+        <van-tab name="1" title="自定义">
+          <view class='popup-datetime'>
+            <view class='popup-datetime-range'>
+              <view data-index='1' bindtap='handleDatetimeRange'> 
+                {{tempStartDatetimeZH}}
+              </view>
+                -
+              <view data-index='2' bindtap='handleDatetimeRange'>
+                {{tempEndDatetimeZH}}
+              </view>
+            </view>
+            <view class='popup-detetime-btn'>
+              <view data-index='1' bindtap='handleDateFast'>
+                今年
+              </view>
+              <view data-index='2' bindtap='handleDateFast'>
+                上一年
+              </view>
+              <view data-index='3' bindtap='handleDateFast'>
+                近三个月
+              </view>
+              <view data-index='4' bindtap='handleDateFast'>
+                近半年
+              </view>
+              <view data-index='5' bindtap='handleDateFast'>
+                近一年
+              </view>
+            </view>
+              <van-popup
+                show="{{ popupDateShow }}"
+                round
+                overlay='{{false}}'
+                position="bottom"
+                custom-style="height: 30%">
+                <view class='popup-datetime-picker' >
+                    <van-datetime-picker
+                      type="date"
+                      value="{{ dateType == 1 ? tempStartDatetime : tempEndDatetime }}"
+                      minDate="{{ dateType == 1 ? minDate : tempStartDatetime }}"
+                      maxDate="{{ dateType == 1 ? tempEndDatetime : maxDate }}"
+                      bind:input="handleDatetimeInput"
+                    />
+                </view>
+              </van-popup>
+          </view>
+        </van-tab>
+      </van-tabs>
+    </view>
+    <view class='detail-btn' >
+      <view class='detail-btn-item1' bindtap='handlePopupClose'>
+        x
+      </view>
+      <view class='detail-btn-item2' bindtap='handlePopupConfirm'>
+        √
+      </view> 
+    </view>
+      
+  </van-popup>
+</view>
 
 <view>
   <van-dialog id="chart-dialog" />
