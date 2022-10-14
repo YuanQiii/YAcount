@@ -4,7 +4,8 @@
     "pages/chart/chart",
     "pages/record/record",
     "pages/mine/mine",
-    "pages/info/info"
+    "pages/info/info",
+    "pages/share/share"
   ],
   "window": {
     "backgroundColor": "#FFF",

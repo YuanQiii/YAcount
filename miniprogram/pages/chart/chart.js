@@ -21,7 +21,6 @@ function initChart(canvas, width, height, dpr) {
 function handleEndDatetime(datetime) {
   let dateZH = formatDate(new Date(datetime), 'YY-MM-DD')
   let dateArr = dateZH.split('-')
-  let temp = ''
   if (dateArr[1] === 12) {
     temp = `${dateArr[0] + 1}-01-${dateArr[2]}`
   }
@@ -58,7 +57,6 @@ Page({
 
     queryDatetime: defaultQueryDatetime,
 
-
     tempStartDatetime: defaultStartDatetime,
     tempEndDatetime: defaultEndDatetime,
     tempStartDatetimeZH: formatDate(defaultStartDatetime, 'YY/MM/DD'),
@@ -72,19 +70,22 @@ Page({
     bill: null,
     billStatistic: null,
 
-    billData0: [],
-    billData1: []
+    billData: [],
+    
   },
 
   handleTabChange(e) {
-    console.log(e.detail.index);
+    this.setData({
+      modeActive: e.detail.index
+    })
+    this.getBillList()
   },
   handleOverlay() {
     this.setData({
-      popupShow: false
+      popupShow: false,
+      popupShareShow: false
     })
   },
-
   handleDateChange(e) {
     if (e.detail.index == 1 && this.data.dateActive == 0) {
       this.setData({
@@ -207,12 +208,11 @@ Page({
     callCloudFunction('getBill', { date: this.data.queryDatetime, mode: Number(this.data.modeActive) }).then(res => {
       console.log(res)
       this.setData({
-        'billList': res.result.arr
+        'billList': res.result.arr,
       })
       this.handleBillList(this.data.startDatetime, this.data.queryDatetime, res.result.arr)
     })
   },
-
   handleBillList(startDatetime, endDatetime, billList) {
 
     // 筛选时间范围内账单
@@ -314,7 +314,7 @@ Page({
       billStatistic: tempStatistic
     })
 
-    this.getBillValue0(tempBill, tempStatistic)
+    this.getBillValue(tempBill, tempStatistic)
     console.log(tempBill)
 
   },
@@ -322,14 +322,13 @@ Page({
     let arr = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六']
     return arr[new Date(time).getUTCDay()]
   },
-
   handleOpenPopup() {
+    console.log(123);
     this.setData({
       popupShow: true
     })
   },
-
-  getBillValue0(bill, statistic) {
+  getBillValue(bill, statistic) {
     let optionData = []
     let amountAll = 0
     console.log('bill', bill)
@@ -372,7 +371,12 @@ Page({
           {
             type: 'pie',
             data: optionData,
-            radius: ['40%', '70%']
+            radius: ['40%', '70%'],
+            itemStyle: {
+              borderRadius: 5,
+              borderColor: '#fff',
+              borderWidth: 2
+            },
           }
         ]
       })
@@ -385,10 +389,9 @@ Page({
     });
 
     this.setData({
-      billData0: optionData
+      billData: optionData
     })
   },
-
   fomatFloat(num, n) {
     var f = parseFloat(num);
     if (isNaN(f)) {

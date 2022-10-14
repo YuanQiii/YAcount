@@ -1,9 +1,91 @@
-<text bindtap="login">登录</text>
-<text bindtap="handleLogout">登出</text>
-<text>{{userInfo.nickName}}</text>
+
+<view>
+  <view>
+    <view>
+      总资产(元)
+    </view>
+    <view>
+      {{allAmount}}
+    </view>
+  </view>
+  <view>
+    <view>
+      年资产(元)
+    </view>
+    <view>
+      {{yearAmount}}
+    </view>
+  </view>
+  <view>
+    <view>
+      年支出(元)
+    </view>
+    <view>
+      {{yearExpenses}}
+    </view>
+  </view>
+</view>
+
+<view>
+  <view>
+    <van-image width="60" height="60" round src="{{userInfo.avatarUrl}}" />
+  </view> 
+  <view>
+    {{userInfo.nickName}}
+  </view> 
+</view>
+<button open-type='feedback'>
+反馈问题
+</button>
+<button open-type='shar e'>
+推荐给好友
+</button>
+<text bindtap="handleEmail">邮箱</text>
+<text bindtap="handleLogin" wx:if="{{userInfo.nickName == undefined}}">登录</text>
+<text bindtap="handleLogout" wx:else >登出</text>
+
+<view class='detail-popup'>
+  <van-popup
+  show="{{ popupShow }}"
+  close-on-click-overlay='true'
+  bind:click-overlay='handleOverlay'
+  position="bottom"
+  round
+  custom-style="height: 50%;">
+    <view class="email-list" wx:if="{{type == ''}}">
+      <view wx:for="{{emailList}}">
+        {{item.address}}
+      </view>
+    </view>
+    <view class="input-email" wx:else>
+      <van-cell-group>
+        <van-field
+          model:value="{{ value }}"
+          center
+          clearable
+          label="{{label}}"
+          placeholder="{{placeholder}}"
+          border="{{ false }}"
+          use-button-slot
+        >
+          <van-button bindtap='handleBtnClick' slot="button" size="small" type="primary">
+            {{btnText}}
+          </van-button>
+        </van-field>
+      </van-cell-group>
+    </view>
+    <view bindtap='handleAdd' wx:if="{{type == '' && emailList.length < 6}}">
+      添加
+    </view>
+    <view bindtap='handleClose'>
+      关闭
+    </view>
+  </van-popup>
+</view>
 
 <view>
   <van-dialog id="mine-dialog" />
   <van-notify id="mine-notify" />
+  <van-toast id="mine-toast" />
 </view>
 

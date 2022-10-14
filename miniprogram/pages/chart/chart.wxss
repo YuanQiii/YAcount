@@ -4,10 +4,10 @@ page {
     background-color: #f7f7f7;
 }
 
-#mychart-dom-bar {
+.mychart-dom-bar {
     width: 100vw;
     height: 100vh;
-    margin-top: -200rpx;
+    margin-top: -22vh;
 }
 
 
@@ -24,6 +24,7 @@ page {
     background-color: aqua;
     height: 70rpx;
     line-height: 70rpx;
+    z-index: 9999;
 }
 
 .detail-popup {
@@ -89,4 +90,8 @@ page {
     display: flex;
     justify-content: space-between;
     margin-bottom: 20rpx;
+}
+
+.chart-progress-line{
+    /* width: 80vw; */
 }

@@ -333,6 +333,23 @@ Page({
     this.getBillList()
   },
 
+  handleShare(e){
+    let date = `${e.currentTarget.dataset.date}01`.replace('年', '/').replace('月', '/')
+    let month = Number( date.split('/')[1])
+    let year = Number(date.split('/')[0])
+    let startDatetime =  new Date(date).getTime()
+    if(month + 1 > 12){
+      year += 1
+      month = 1
+    }else{
+      month += 1
+    }
+    let endDatetime = new Date(`${year}/${month}/01`).getTime()
+    wx.navigateTo({
+      url: `../share/share?startDatetime=${startDatetime}&endDatetime=${endDatetime}`
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */

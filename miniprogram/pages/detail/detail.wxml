@@ -25,6 +25,9 @@
       <view>
         {{billStatistic[key1].date}}
       </view>
+      <view data-date="{{billStatistic[key1].date}}" bindtap='handleShare'>
+        分享
+      </view>
       <view class='amount'>
         <view>
           支出：{{billStatistic[key1].amount0}}

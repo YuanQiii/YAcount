@@ -1,0 +1,64 @@
+<!--pages/share/share.wxml-->
+
+<view class="container">
+  <ec-canvas class="mychart-dom-bar0" canvas-id="mychart-bar0" ec="{{ ec0 }}"></ec-canvas>
+  <ec-canvas class="mychart-dom-bar1" canvas-id="mychart-bar1" ec="{{ ec1 }}"></ec-canvas>
+</view>
+
+<view>
+  <view wx:for="{{billList}}" wx:for-item="item1" wx:for-index="index1">
+    <view wx:for="{{item1}}"  wx:for-item="item2" wx:for-index="index2">
+      <view>
+        {{index1}}/{{index2}}
+      </view>
+      <view class="bill-item" wx:for="{{item2}}" wx:for-item="item3" wx:for-index="index3">
+        <view class="bill-left">
+          <view>
+            {{item3.category}}
+          </view>
+          <view class="bill-note">
+            {{item3.note}}
+          </view>
+        </view>
+        <view class="bill-amount">
+          <view wx:if="{{item3.mode}}">
+            +
+          </view>
+          <view wx:else>
+            -
+          </view>
+          <view>
+            {{item3.amount}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view>
+  <view bindtap="handleShare">
+    分享
+  </view>
+  <view bindtap="handleExcel">
+    发送Excel到邮箱
+  </view>
+</view>
+
+<view class="share-popup">
+  <van-popup
+  show="{{ popupShareShow }}"
+  close-on-click-overlay='true'
+  bind:click-overlay='handleOverlay'
+  position="bottom"
+  round
+  custom-style="height: 20%;">
+    <button open-type="share">分享给好友</button>
+    <view bindtap='handleSave'>
+      保存图片
+    </view>
+    <view bindtap='handleOverlay'>
+      关闭
+    </view>
+  </van-popup>
+</view>

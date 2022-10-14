@@ -19,28 +19,31 @@
 <view>
   <van-tabs swipeable active="{{ modeActive }}" bind:change="handleTabChange">
     <van-tab name='0' title='支出'>
-      <view class="container">
-        <ec-canvas id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
-      </view>
-      <view class='chart-progress'>
-        <view class='chart-progress-item' wx:for='{{billData0}}'>
-          <view class='chart-progress-top'>
-            <view>
-              {{item.name}}
-            </view>
-            <view>
-              {{item.value}}
-            </view>
-          </view>
-          <view>
-            <van-progress percentage="{{item.rate}}" />
-          </view>
+    </van-tab>
+    <van-tab name='1' title='收入'>
+    </van-tab>
+  </van-tabs>
+</view>
+
+<view>
+  <view class="container">
+    <ec-canvas class="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
+  </view>
+  <view class='chart-progress'>
+    <view class='chart-progress-item' wx:for='{{billData}}'>
+      <view class='chart-progress-top'>
+        <view>
+          {{item.name}}
+        </view>
+        <view>
+          ￥{{item.value}}
         </view>
       </view>
-        
-    </van-tab>
-    <van-tab name='1' title='收入'>内容 2</van-tab>
-  </van-tabs>
+      <view>
+        <van-progress percentage="{{item.rate}}" />
+      </view>
+    </view>
+  </view>
 </view>
 
 <view class='detail-popup'>
@@ -123,6 +126,9 @@
       
   </van-popup>
 </view>
+
+
+
 
 <view>
   <van-dialog id="chart-dialog" />

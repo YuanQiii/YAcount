@@ -1,0 +1,27 @@
+/* pages/share/share.wxss */
+.bill-item{
+    display: flex;
+    justify-content: space-between;
+}
+.bill-left{
+    display: flex;
+}
+.bill-note{
+    margin-left: 40rpx;
+}
+
+.bill-amount{
+    display: flex;
+}
+
+.mychart-dom-bar0{
+    width: 100vw;
+    height: 100vh;
+    margin-top: -25vh;
+    
+}
+.mychart-dom-bar1{
+    width: 100vw;
+    height: 100vh;
+    margin-top: -50vh;
+}

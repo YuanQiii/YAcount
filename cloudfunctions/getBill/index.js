@@ -9,23 +9,33 @@ exports.main = async (event, context) => {
   const db = cloud.database()
   const _ = db.command
   let arr = []
+  let startDatetime = event.startDatetime == undefined ? new Date('1990-01-01').getTime() : event.startDatetime
 
-  if (event.mode == undefined) {
-    await db.collection('bill').where({
-      bill_date: _.lt(event.date)
-    }).get().then(res => {
-      arr = res.data
-    })
-  } else {
-    await db.collection('bill').where({
-      bill_date: _.lt(event.date),
-      mode: event.mode
-    }).get().then(res => {
-      arr = res.data
-    })
-  }
+  await db.collection('user').where({
+    openid: wxContext.OPENID
+  }).get().then(async res => {
+    if (event.mode == undefined) {
+      await db.collection('bill').where({
+        bill_date: _.and(_.gte(startDatetime), _.lt(event.date)),
+        openid: res.data[0]._id
+      }).get().then(res => {
+        arr = res.data
+      })
+    } else {
+      await db.collection('bill').where({
+        bill_date: _.and(_.gte(startDatetime), _.lt(event.date)),
+        openid: res.data[0]._id,
+        mode: event.mode
+      }).get().then(res => {
+        arr = res.data
+      })
+    }
+  })
+
+
 
   return {
-    arr
+    arr,
+    openid: wxContext.OPENID
   }
 }
