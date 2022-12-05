@@ -1,48 +1,53 @@
 
-<view>
-  <view>
+<view class='mine-top bg-gradual-orange padding radius text-center shadow-blur'>
+  <view class='mine-top-item'>
     <view>
       总资产(元)
     </view>
-    <view>
+    <view class='mine-mount'>
       {{allAmount}}
     </view>
   </view>
-  <view>
+  <view class='mine-top-item'>
     <view>
       年资产(元)
     </view>
-    <view>
+    <view class='mine-mount'>
       {{yearAmount}}
     </view>
   </view>
-  <view>
+  <view class='mine-top-item'>
     <view>
       年支出(元)
     </view>
-    <view>
+    <view class='mine-mount'>
       {{yearExpenses}}
     </view>
   </view>
 </view>
 
-<view>
+<view class='mine-avt'>
   <view>
-    <van-image width="60" height="60" round src="{{userInfo.avatarUrl}}" />
+    <van-image width="60" height="60" round src="{{userInfo.avatarUrl}}" wx:if="{{userInfo.avatarUrl}}" />
+    <image style="width: 100rpx; height: 100rpx" round src="../../images/user.png" mode="aspectFit" lazy-load="false" wx:else>
+    </image>
   </view> 
   <view>
     {{userInfo.nickName}}
   </view> 
 </view>
-<button open-type='feedback'>
-反馈问题
-</button>
-<button open-type='shar e'>
-推荐给好友
-</button>
-<text bindtap="handleEmail">邮箱</text>
-<text bindtap="handleLogin" wx:if="{{userInfo.nickName == undefined}}">登录</text>
-<text bindtap="handleLogout" wx:else >登出</text>
+
+<view class='mine-btn'>
+  <button class="mine-btn0 cu-btn bg-gradual-blue shadow-blur" bindtap="handleEmail">邮箱</button>
+  <button class="mine-btn0 cu-btn bg-gradual-blue shadow-blur" open-type='feedback'>
+  反馈问题
+  </button>
+  <button class="mine-btn0 cu-btn bg-gradual-blue shadow-blur" open-type='shar e'>
+  推荐给好友
+  </button>
+  <button class="mine-btn0 cu-btn bg-gradual-blue shadow-blur" bindtap="handleLogin" wx:if="{{userInfo.nickName == undefined}}">登录</button>
+  <button class="mine-btn0 cu-btn bg-gradual-blue shadow-blur" bindtap="handleLogout" wx:else >登出</button>
+</view>
 
 <view class='detail-popup'>
   <van-popup
@@ -52,34 +57,46 @@
   position="bottom"
   round
   custom-style="height: 50%;">
-    <view class="email-list" wx:if="{{type == ''}}">
-      <view wx:for="{{emailList}}">
-        {{item.address}}
+  <view class='email-container'>
+    <view class='email-main'>
+      <view class="email-list" wx:if="{{type == ''}}">
+        <view class="email-list-item" wx:for="{{emailList}}">
+          {{item.address}}
+        </view>   
+      </view>
+      <view class="input-email" wx:else>
+          <van-field
+            model:value="{{ value }}"
+            center
+            clearable
+            label="{{label}}"
+            placeholder="{{placeholder}}"
+            border="{{ false }}"
+            use-button-slot
+          >
+            <van-button bindtap='handleBtnClick' slot="button" size="small" type="primary">
+              {{btnText}}
+            </van-button>
+          </van-field>
       </view>
     </view>
-    <view class="input-email" wx:else>
-      <van-cell-group>
-        <van-field
-          model:value="{{ value }}"
-          center
-          clearable
-          label="{{label}}"
-          placeholder="{{placeholder}}"
-          border="{{ false }}"
-          use-button-slot
-        >
-          <van-button bindtap='handleBtnClick' slot="button" size="small" type="primary">
-            {{btnText}}
-          </van-button>
-        </van-field>
-      </van-cell-group>
+    
+    <view class='email-btn' >
+      <button style='margin-top: 20rpx' class='cu-btn linebordersize-grey shadow' bindtap='handleAdd' wx:if="{{type == '' && emailList.length < 6}}">
+        添加
+      </button>
+      <button style='margin-top: 20rpx' class='cu-btn linebordersize-grey shadow' bindtap='handleBack' wx:if="{{type == 'register'}}">
+        返回
+      </button>
+      <button style='margin-top: 20rpx' class='cu-btn linebordersize-grey shadow' bindtap='handleClose'>
+        关闭
+      </button>
     </view>
-    <view bindtap='handleAdd' wx:if="{{type == '' && emailList.length < 6}}">
-      添加
-    </view>
-    <view bindtap='handleClose'>
-      关闭
-    </view>
+  </view>
+    
+
+      
+
   </van-popup>
 </view>
 

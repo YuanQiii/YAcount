@@ -38,13 +38,12 @@ exports.main = async (event, context) => {
       if (ele1 === ele2.name) {
         arr.push({
           name: ele1,
-          mode: ele2.mode
+          mode: ele2.mode,
+          icon: ele2.icon
         })
       }
     })
   })
-
-
 
   return {
     arr,

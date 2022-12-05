@@ -1,0 +1,68 @@
+<recycle-view batch="{{batchSetRecycleData}}" id="recycleId">
+  <recycle-item wx:for="{{recycleList}}" wx:for-item="value" wx:key="id">
+      <view data-type="{{value.type}}" class='top bg-gradual-purple text-center' wx:if="{{value.type == 'month'}}">
+        <view class='detail-left'>
+          <view class="detail-date">
+            {{value.date}}
+          </view>
+          <view class='amount'>
+            <view class='amount0'>
+              支出：{{value.amount0}}
+            </view>
+            <view class='amount1'>
+              收入：{{value.amount1}}
+            </view>
+          </view>
+        </view>
+        <view class='detail-right'>
+          <text class="cuIcon-forward" data-date="{{value.date}}" bindtap='handleShare'></text>
+        </view>
+      </view>
+
+      <view data-type="{{value.type}}" class='bill-item-top bg-gradual-blue text-center' wx:if="{{value.type == 'date'}}">
+        <view>
+          {{value.date}}
+        </view>
+        <view>
+          {{id}}
+        </view>
+          
+        <view class='bill-item-top-amount'>
+          <view class='bill-item-top-amount-0'>
+            -{{value.amount0}}
+          </view>
+          <view class='bill-item-top-amount-1'>
+            +{{value.amount1}}
+          </view>
+        </view>
+      </view>
+
+      <view class="bill-list text-center">
+        <view data-type="{{value.type}}"  class='bill-item' bindtap='toInfo' data-info='{{value}}' wx:if="{{value.type == 'day'}}">
+          
+            <view class='bill-item-left'>
+            <van-image style='margin-right: 20rpx' width="30" height="30" src="{{value.icon}}" />
+            <view>
+              {{value.category}}
+            </view>
+            <view class="detail-note" >
+              {{value.note}}
+            </view>
+          </view>
+            
+          <view class='mode-amount'>
+            <view wx:if='{{value.mode === 1}}'>
+              +
+            </view>
+            <view wx:else>
+              -
+            </view>
+            <view class='amount-num'>
+              {{value.amount}}
+            </view>
+          </view>
+
+        </view>
+      </view>
+  </recycle-item>
+</recycle-view>

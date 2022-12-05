@@ -1,6 +1,7 @@
 // pages/detail/detail.js
 import { callCloudFunction } from '../../utils/cloud_helper'
 import { formatDate } from '../../utils/format_date'
+import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast';
 
 function handleEndDatetime(datetime) {
   let dateZH = formatDate(new Date(datetime), 'YY-MM-DD')
@@ -23,8 +24,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    startDateZH: formatDate(defaultStartDatetime, 'YY-MM'),
-    endDateZH: formatDate(defaultEndDatetime, 'YY-MM'),
+    startDateZH: formatDate(defaultStartDatetime, 'YY/MM'),
+    endDateZH: formatDate(defaultEndDatetime, 'YY/MM'),
 
     maxDate: new Date().getTime(),
     minDate: new Date('1990-01-01').getTime(),
@@ -51,21 +52,48 @@ Page({
     billStatistic: null,
     popupShow: false,
     popupDateShow: false,
+    tabsShow: false,
     dateActive: 0,
+    token: wx.getStorageSync('token'),
+    openid: '',
+    btnActive: 0,
+
+    isInit: false,
+
+    viewBillAll: [],
+    viewBill: [],
+    count: 0,
+    startIndex: 0,
+
+    billAll: [],
+    batchSetRecycleData: true,
+    recycleList: [],
+    itemHeight: 100 / (750 / wx.getSystemInfoSync().windowWidth),
+
+    loading: null
   },
 
   getBillList() {
+    this.setData({
+      loading: Toast.loading({
+        forbidClick: true,
+        selector: '#detail-toast',
+        duration: 0
+      })
+    })
     callCloudFunction('getBill', { date: this.data.queryDatetime }).then(res => {
       console.log(res)
       this.setData({
-        'billList': res.result.arr
+        'billList': res.result.arr,
       })
+      setTimeout(() => {
+        getApp().globalData.openid = res.result.openid
+      }, 2000);
       this.handleBillList(this.data.startDatetime, this.data.queryDatetime, res.result.arr)
     })
   },
 
   handleBillList(startDatetime, endDatetime, billList) {
-
     // 筛选时间范围内账单
     let tempList = []
     for (let index = 0; index < billList.length; index++) {
@@ -79,7 +107,6 @@ Page({
     tempList = tempList.sort((a, b) => {
       return a.bill_date - b.bill_date
     })
-    console.log(tempList)
 
     // 以月分类
     let bill = {}
@@ -114,8 +141,6 @@ Page({
       bill[ele] = tempObj
       tempBill[new Date(ele).getTime()] = bill[ele]
     });
-
-
 
     let tempStatistic = {}
     Object.keys(tempBill).forEach(ele1 => {
@@ -158,14 +183,46 @@ Page({
 
     });
 
-    console.log('tempStatistic', tempStatistic)
+    let billAll = []
+    Object.keys(tempBill).forEach(key1 => {
+      billAll.push({
+        type: 'month',
+        amount0: tempStatistic[key1].amount0,
+        amount1: tempStatistic[key1].amount1,
+        date: tempStatistic[key1].date
+      })
+
+      Object.keys(tempBill[key1]).forEach(key2 => {
+        billAll.push({
+          type: 'date',
+          amount0: tempStatistic[key1][key2].amount0,
+          amount1: tempStatistic[key1][key2].amount1,
+          date: tempStatistic[key1][key2].date
+        })
+        tempBill[key1][key2].forEach((element, index) => {
+          billAll.push({
+            type: 'day',
+            date: element.bill_date,
+            ...element
+          })
+        })
+      })
+    })
 
     this.setData({
       bill: tempBill,
-      billStatistic: tempStatistic
-    })
-    console.log(tempBill)
+      billStatistic: tempStatistic,
+      billAll: billAll
+    }, () => {
+      if (this.data.loading != null) {
+        this.data.loading.clear()
+      }
+      this.setData({
+        loading: null
+      })
 
+    })
+    console.log('tempBill', tempBill)
   },
 
   getWeek(time) {
@@ -173,22 +230,12 @@ Page({
     return arr[new Date(time).getUTCDay()]
   },
 
-  toInfo(e) {
-    console.log(e.currentTarget.dataset.info)
-    let info = e.currentTarget.dataset.info
-    wx.navigateTo({
-      url: '../info/info',
-      success(res) {
-        res.eventChannel.emit('acceptDataFromDetailPage', { data: info })
-      }
-    })
-  },
-
   handleOverlay() {
     this.setData({
       popupShow: false
     })
   },
+
   handleDateInput(e) {
     console.log(e)
     this.setData({
@@ -200,9 +247,9 @@ Page({
     if (this.data.dateActive == 0) {
       this.setData({
         startDatetime: defaultStartDatetime,
-        startDateZH: formatDate(defaultStartDatetime, 'YY-MM'),
+        startDateZH: formatDate(defaultStartDatetime, 'YY/MM'),
         endDatetime: this.data.tempDate1,
-        endDateZH: formatDate(this.data.tempDate1, 'YY-MM'),
+        endDateZH: formatDate(this.data.tempDate1, 'YY/MM'),
         queryDatetime: handleEndDatetime(this.data.tempDate1),
         popupShow: false,
       })
@@ -217,7 +264,15 @@ Page({
         queryDatetime: handleEndDatetime(this.data.tempEndDatetime),
         popupShow: false,
       })
+      setTimeout(() => {
+        this.setData({
+          tabsShow: false,
+        })
+      }, 500);
     }
+    this.setData({
+      btnActive: 0
+    })
     this.getBillList()
     this.setData({
       dateType: 1
@@ -226,13 +281,19 @@ Page({
 
   handlePopupClose() {
     this.setData({
-      popupShow: false,
+      popupShow: false
     })
+    setTimeout(() => {
+      this.setData({
+        tabsShow: false,
+      })
+    }, 500);
   },
 
   handleOpenPopup() {
     this.setData({
-      popupShow: true
+      popupShow: true,
+      tabsShow: true
     })
   },
 
@@ -274,6 +335,9 @@ Page({
 
   handleDateFast(e) {
     let index = e.currentTarget.dataset.index
+    this.setData({
+      btnActive: index
+    })
     let start = null
     let end = null
     if (index == 1) {
@@ -324,58 +388,78 @@ Page({
 
     this.setData({
       startDatetime: start,
-      startDateZH: formatDate(start, 'YY-MM'),
+      startDateZH: formatDate(start, 'YY/MM'),
       endDatetime: end,
-      endDateZH: formatDate(end, 'YY-MM'),
+      endDateZH: formatDate(end, 'YY/MM'),
       queryDatetime: handleEndDatetime(end),
       popupShow: false
     })
     this.getBillList()
   },
 
-  handleShare(e){
-    let date = `${e.currentTarget.dataset.date}01`.replace('年', '/').replace('月', '/')
-    let month = Number( date.split('/')[1])
-    let year = Number(date.split('/')[0])
-    let startDatetime =  new Date(date).getTime()
-    if(month + 1 > 12){
-      year += 1
-      month = 1
-    }else{
-      month += 1
-    }
-    let endDatetime = new Date(`${year}/${month}/01`).getTime()
-    wx.navigateTo({
-      url: `../share/share?startDatetime=${startDatetime}&endDatetime=${endDatetime}`
-    })
-  },
-
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.getBillList()
+    if (wx.getStorageSync('token')) {
+      this.getBillList()
+    }
+
+    this.setData({
+      isInit: true
+    })
+
+
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady() {
-
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    if (this.data.token != wx.getStorageSync('token')) {
+      this.setData({
+        isInit: false
+      })
+      Toast.loading({
+        forbidClick: true,
+        selector: '#detail-toast',
+        duration: 300
+      })
+      setTimeout(() => {
+        this.setData({
+          isInit: true
+        })
+      }, 500);
+    } else {
+      this.setData({
+        isInit: true
+      })
+    }
 
+    this.setData({
+      token: wx.getStorageSync('token')
+    })
+
+    if(this.data.token != '') {
+      if(getApp().globalData.isUpdate){
+        this.getBillList()
+      }
+    }
+    if(getApp().globalData){
+      getApp().globalData.isUpdate = false
+    }
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide() {
-
   },
 
   /**

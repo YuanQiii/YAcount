@@ -2,6 +2,7 @@
   "usingComponents": {
     "van-dialog": "@vant/weapp/dialog/index",
     "van-notify": "@vant/weapp/notify/index",
+    "van-toast": "@vant/weapp/toast/index",
     "van-tab": "@vant/weapp/tab/index",
     "van-tabs": "@vant/weapp/tabs/index",
     "van-field": "@vant/weapp/field/index",
@@ -10,6 +11,7 @@
     "van-popup": "@vant/weapp/popup/index",
     "van-datetime-picker": "@vant/weapp/datetime-picker/index",
     "van-icon": "@vant/weapp/icon/index",
-    "van-loading": "@vant/weapp/loading/index"
+    "van-loading": "@vant/weapp/loading/index",
+    "van-image": "@vant/weapp/image/index"
   }
 }

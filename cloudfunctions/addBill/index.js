@@ -19,6 +19,7 @@ exports.main = async (event, context) => {
         category: event.category,
         mode: event.mode,
         note: event.note,
+        icon: event.icon,
         openid: res.data[0]._id
       }
     })

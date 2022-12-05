@@ -1,101 +1,52 @@
 .key-container {
-    margin-top: 50rpx;
-    width: 100%;
-    display: flex;
-    display: -webkit-flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.key-container .keyboard {
+    height: 450rpx;
+    background-color: #fff;
     position: fixed;
     bottom: 0;
     left: 0;
-    height: 360rpx;
-    width: 100%;
-    background-color: #fff;
-}
-
-.key-container .keyboard .key-row {
+    width: 100vw;
     display: flex;
-    display: -webkit-flex;
-    position: relative;
-    height: 90rpx;
-    line-height: 90rpx;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.key-container .keyboard .key-row::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    height: 1rpx;
-    border-top: 1rpx solid #d5d5d6;
-    color: #d5d5d6;
-    -webkit-transform-origin: 0 0;
-    transform-origin: 0 0;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
+.key {
+    display: flex;
+    justify-content: center;
+    width: 660rpx;
+    margin-top: 20rpx;
 }
 
-.key-container .keyboard .key-cell {
-    flex: 1;
-    -webkit-box-flex: 1;
-    text-align: center;
-    position: relative;
+
+.key-row {
+    display: flex;
 }
 
-.key-container .keyboard .key-cell::after {
-    content: "";
-    position: absolute;
-    overflow: hidden;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    height: 200%;
-    border-right: 1rpx solid #d5d5d6;
-    color: #d5d5d6;
-    -webkit-transform-origin: 0 0;
-    transform-origin: 0 0;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-    -moz-transform: scaleY(0.5);
-    -ms-transform: scaleY(0.5);
-    -o-transform: scaleY(0.5);
+.key-cell {
+    height: 70rpx;
+    width: 150rpx;
+    margin-left: 20rpx;
+    margin-top: 20rpx;
+
 }
 
-.key-container .keyboard .key-cell:nth-last-child(1)::after {
-    border-right: 0;
+.key-left {
+    margin-left: 0rpx;
 }
 
-.key-container .keyboard .disabled {
-    background: rgba(0, 0, 0, 0.2);
+.key-clear {
+    width: 150rpx;
+    height: 158rpx;
+    margin-left: 20rpx;
+    margin-top: 20rpx;
 }
 
-.key-container .keyboard .key-confirm {
-    position: absolute;
-    text-align: center;
-    height: 180rpx;
-    width: 25%;
-    line-height: 180rpx;
-    background: #fff;
-    z-index: 5;
-    right: 0;
-    bottom: 1rpx;
-}
-
-.key-container .keyboard .key-clear {
-    position: absolute;
-    text-align: center;
-    height: 180rpx;
-    width: 25%;
-    line-height: 180rpx;
-    background: #fff;
-    z-index: 5;
-    right: 0;
-    top: 1rpx;
+.key-confirm {
+    width: 150rpx;
+    height: 158rpx;
+    margin-left: 20rpx;
+    margin-top: 20rpx;
 }
 
 .record {
@@ -109,22 +60,18 @@
     display: flex;
 }
 
+
 .categories {
-    margin-top: 110rpx;
+    margin-top: 130rpx;
     overflow: scroll;
 }
 
-.note {
-    position: fixed;
-    bottom: 370rpx;
-    width: 100%;
-}
-
 .note-container {
+    width: 660rpx;
     display: flex;
     justify-content: space-between;
-    margin-left: 20rpx;
-    margin-right: 20rpx;
+    margin-bottom: -20rpx;
+    margin-top: -20rpx;
 }
 
 .popup-top {
@@ -161,6 +108,7 @@
     align-items: center;
     justify-content: center;
     line-height: 80rpx;
+    padding: 20rpx;
 }
 
 
@@ -178,7 +126,7 @@
 }
 
 .bill {
-    margin-top: 10rpx;
+    margin-top: 20rpx;
 }
 
 
@@ -201,7 +149,7 @@
     left: 70rpx;
     top: -15rpx;
     font-size: 70rpx;
-    /* border: solid 3rpx red; */
+    width: 80vw;
     display: flex;
     align-items: center;
 }
@@ -226,7 +174,16 @@
     50% {
         opacity: 1;
     }
+}
 
+.bill-input-line {
+    display: inline-block;
+    width: 60vw;
+    height: 1rpx;
+    background-color: grey;
+    position: absolute;
+    left: 0;
+    top: 90rpx;
 }
 
 .category-container {
@@ -247,4 +204,59 @@
 
 .select {
     box-shadow: 0 0 5px #333;
+}
+
+.detail-btn {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.detail-btn-item1 {
+    margin-left: 30rpx;
+    margin-top: 20rpx;
+    font-size: 40rpx;
+}
+
+.detail-btn-item2 {
+    margin-right: 30rpx;
+    margin-top: 20rpx;
+    font-size: 40rpx;
+}
+
+.popup-text {
+    margin-top: 20rpx;
+}
+
+.note-btn {
+    width: 320rpx;
+}
+
+.btn {
+    height: 80rpx;
+    font-size: 50rpx;
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn0 {
+    margin-left: 40rpx;
+}
+
+.btn1 {
+    margin-right: 40rpx;
+}
+
+.btn-text {
+    font-size: 35rpx;
+}
+
+.add-btn {
+    width: 80vw;
+    margin-top: 20rpx;
 }

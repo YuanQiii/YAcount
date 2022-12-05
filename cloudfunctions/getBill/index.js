@@ -9,10 +9,11 @@ exports.main = async (event, context) => {
   const db = cloud.database()
   const _ = db.command
   let arr = []
-  let startDatetime = event.startDatetime == undefined ? new Date('1990-01-01').getTime() : event.startDatetime
+  let startDatetime = event.startDatetime || new Date('1990-01-01').getTime()
+  let openid = event.openid || wxContext.OPENID
 
   await db.collection('user').where({
-    openid: wxContext.OPENID
+    openid
   }).get().then(async res => {
     if (event.mode == undefined) {
       await db.collection('bill').where({

@@ -1,0 +1,121 @@
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    /* margin-top: 10rpx;
+    margin-bottom: 10rpx; */
+    height: 100rpx;
+    line-height: 100rpx;
+    padding-left: 30rpx;
+    width: 100vw;
+}
+
+.detail-left {
+    display: flex;
+    text-align: left;
+}
+
+.detail-right {
+    font-size: 40rpx;
+    position: absolute;
+    margin-left: 88vw;
+    color: white;
+}
+
+.detail-date {
+    margin-right: 20rpx;
+    width: 150rpx;
+}
+
+.bill-item-top {
+    display: flex;
+    justify-content: space-between;
+    /* margin-top: 10rpx;
+    margin-bottom: 10rpx; */
+    height: 100rpx;
+    line-height: 100rpx;
+    padding-left: 30rpx;
+    padding-right: 30rpx;
+    width: 100vw;
+}
+
+.bill-item-top-amount {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.bill-item-top-amount-0 {
+    margin-right: 20rpx;
+}
+
+.bill-item-top-amount-1 {}
+
+.bill-list {
+    /* margin-bottom: 10rpx;
+    margin-top: 10rpx; */
+    padding-left: 30rpx;
+    padding-right: 30rpx;
+}
+
+.bill-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: solid 1rpx grey;
+    height: 100rpx;
+    box-sizing: border-box;
+    width: calc(100vw - 60rpx);
+}
+
+.bill-list:last-of-type {
+    border-bottom: none;
+}
+
+.bill-item-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bg-gradual-purple {
+	background-image: linear-gradient(45deg, #9000ff, #5e00ff);
+	color: #ffffff;
+}
+
+.bg-gradual-blue{
+    background-image: linear-gradient(45deg, #0081ff, #1cbbb4);
+	color: #ffffff;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.amount {
+    display: flex;
+    width: 60vw;
+    text-align: left;
+}
+
+.amount0 {
+    width: 30vw;
+}
+
+.amount1 {
+    width: 30vw;
+}
+
+.cuIcon-forward:before {
+	content: "\e6eb";
+}
+
+.mode-amount {
+    display: flex;
+    justify-content: flex-end;
+    width: 20vw;
+}
+
+.amount-num {
+    text-align: right;
+}

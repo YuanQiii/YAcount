@@ -1,8 +1,14 @@
-<view>
-    <view>
-        {{info.category}}
+<view class='info-container'>
+    <view class="info-top">
+        <view class='image'>
+            <van-image width="30" height="30" src="{{info.icon}}" />
+        </view>
+        <view style="margin-left: 20rpx">
+            {{info.category}}
+        </view>
     </view>
-    <view>
+
+    <view class="info-amount" style="color: {{info.mode == 0 ? '#f37b1d' : '#1cbbb4'}}">
         <view wx:if='{{info.mode}}' >
             +{{info.amount}}
         </view>
@@ -10,24 +16,26 @@
             -{{info.amount}}
         </view>
     </view>
-    <view>
-        <view>
+
+    <view class="info-date">
+        <view class='info-left'>
             账单时间：
         </view>
         <view>
             {{info.bill_date}}
         </view>
     </view>
-    <view>
-        <view>
+    <view class="info-date">
+        <view class='info-left'>
             记录时间：
         </view>
         <view>
             {{info.record_date}}
         </view>
     </view>
-    <view>
-        <view>
+
+    <view class='info-note' wx:if="{{info.note != ''}}">
+        <view class='info-left'>
             备注：
         </view>
         <view>
@@ -35,17 +43,15 @@
         </view>
     </view>
       
-    <view>
-        <view bindtap='handleUpdate'>
+    <view class='info-btn'>
+        <button class="info-btn0 cu-btn line-cyan shadow" bindtap='handleUpdate'>
             编辑
-        </view>
-        <view bindtap='handleDelete'>
+        </button>
+        <button style='margin-top: 30rpx' class="info-btn0 cu-btn line-orange shadow" bindtap='handleDelete'>
             删除
-        </view>
-          
-          
+        </button>
     </view>
       
-      
+      <van-dialog id="info-dialog" />
 </view>
   

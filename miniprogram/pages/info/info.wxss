@@ -1,1 +1,49 @@
 /* pages/info/info.wxss */
+
+.info-container {
+    padding: 40rpx;
+}
+
+.info-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40rpx;
+}
+
+.info-image {
+    margin-top: 10rpx;
+}
+
+.info-amount {
+    display: flex;
+    justify-content: center;
+    font-size: 80rpx;
+    margin-top: 20rpx;
+    margin-bottom: 20rpx;
+}
+
+.info-date {
+    display: flex;
+    font-size: 30rpx;
+    margin-bottom: 20rpx;
+}
+
+.info-left {
+    width: 160rpx;
+}
+
+.info-note {
+    display: flex;
+}
+
+.info-btn {
+    margin-top: 40rpx;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-btn0 {
+    font-size: 30rpx;
+    height: 60rpx;
+}

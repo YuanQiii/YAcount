@@ -17,6 +17,7 @@ App({
 
       var categoriesList = []
       await callCloudFunction('getCategoriesList').then(res => {
+        console.log(res);
         let arr0 = []
         let arr1 = []
         res.result.arr.map(ele => {
@@ -31,7 +32,10 @@ App({
     }
 
     this.globalData = {
-      categoriesList
+      categoriesList,
+      openid: '',
+      toast: null,
+      isUpdate: false
     };
   }
 });

@@ -1,6 +1,8 @@
 // pages/share/share.js
 import * as echarts from '../../ec-canvas/echarts'
 import { callCloudFunction } from '../../utils/cloud_helper'
+import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast';
+import {formatDate} from '../../utils/format_date'
 
 let chart0 = null
 let chart1 = null
@@ -41,22 +43,105 @@ Page({
     },
     amountAll0: 0,
     amountAll1: 0,
-    popupShareShow: true,
-    billList: {}
+    popupShareShow: false,
+    popupEmailShow: false,
+    billList: {},
+    startDatetime: 0,
+    endDatetime: 0,
+    openid: '',
+    shareUrl: '',
+    share: false,
+    emailList: [],
+    email: '934024048@qq.com',
+    btnShow: false,
+    fn: null
   },
 
   handleShare() {
-
+    this.setData({
+      popupShareShow: true
+    })
+  },
+  chooseEmail(e) {
+    this.setData({
+      popupEmailShow: false,
+      email: e.currentTarget.dataset.address
+    })
+    this.sendExcel()
+  },
+  sendExcel() {
+    Toast.loading({
+      forbidClick: true,
+      selector: '#share-toast',
+      duration: 0
+    })
+    callCloudFunction('sendExcel', {
+      startDatetime: Number(this.data.startDatetime),
+      date: Number(this.data.endDatetime),
+      openid: this.data.openid,
+      email: this.data.email,
+      filename: `${formatDate(Number(this.data.startDatetime), 'YY年MM月')}账单明细`
+    }).then(res => {
+      console.log(res);
+      Toast.success({
+        forbidClick: true,
+        selector: '#share-toast',
+        duration: 1000
+      });
+    })
   },
   handleExcel() {
-
+    this.setData({
+      popupEmailShow: true
+    })
   },
   handleSave() {
+    const ecComponent0 = this.selectComponent('#mychart-dom-save0');
+    const ecComponent1 = this.selectComponent('#mychart-dom-save1');
+    let tempFilePath0 = ''
+    let tempFilePath1 = ''
+
+    // 先保存图片到临时的本地文件，然后存入系统相册
+    let p1 = new Promise((resolve, reject) => {
+      ecComponent0.canvasToTempFilePath({
+        success: res => {
+          console.log("tempFilePath:", res.tempFilePath)
+          resolve(res.tempFilePath)
+        },
+        fail: res => console.log(res)
+      });
+    })
+
+    let p2 = new Promise((resolve, reject) => {
+      ecComponent1.canvasToTempFilePath({
+        success: res => {
+          console.log("tempFilePath:", res.tempFilePath)
+          resolve(res.tempFilePath)
+        },
+        fail: res => console.log(res)
+      });
+    })
+
+    Promise.all([p1, p2]).then(res => {
+      res.forEach(element => {
+        wx.saveImageToPhotosAlbum({
+          filePath: element,
+          success: function () {
+            console.log('保存图片的地址');
+          },
+          fail: function (err) {
+            console.log('图片保存失败了', err);
+          },
+        });
+      });
+    })
+
 
   },
   handleOverlay() {
     this.setData({
-      popupShareShow: false
+      popupShareShow: false,
+      popupEmailShow: false
     })
   },
 
@@ -75,7 +160,7 @@ Page({
       Object.keys(bill[ele1]).forEach(ele2 => {
         let flag = true
         bill[ele1][ele2].forEach(ele3 => {
-          if(ele3.mode){
+          if (ele3.mode) {
             optionData1.forEach(ele4 => {
               if (ele4.name == ele3.category) {
                 ele4.value += ele3.amount
@@ -89,7 +174,7 @@ Page({
               })
             }
             amountAll1 += ele3.amount
-          }else{
+          } else {
             optionData0.forEach(ele4 => {
               if (ele4.name == ele3.category) {
                 ele4.value += ele3.amount
@@ -114,44 +199,48 @@ Page({
     })
 
     function update() {
-      chart0.setOption({
-        title: {
-          text: `￥-${amountAll0}`,
-          left: 'center',
-          top: 'center'
-        },
-        series: [
-          {
-            type: 'pie',
-            data: optionData0,
-            radius: ['40%', '70%'],
-            itemStyle: {
-              borderRadius: 5,
-              borderColor: '#fff',
-              borderWidth: 2
-            },
-          }
-        ]
-      })
-      chart1.setOption({
-        title: {
-          text: `￥+${amountAll1}`,
-          left: 'center',
-          top: 'center'
-        },
-        series: [
-          {
-            type: 'pie',
-            data: optionData1,
-            radius: ['40%', '70%'],
-            itemStyle: {
-              borderRadius: 5,
-              borderColor: '#fff',
-              borderWidth: 2
-            },
-          }
-        ]
-      })
+      if (chart0 == null || chart1 == null) {
+        wx.nextTick(update)
+      } else {
+        chart0.setOption({
+          title: {
+            text: `￥-${amountAll0}`,
+            left: 'center',
+            top: 'center'
+          },
+          series: [
+            {
+              type: 'pie',
+              data: optionData0,
+              radius: ['40%', '70%'],
+              itemStyle: {
+                borderRadius: 5,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+            }
+          ]
+        })
+        chart1.setOption({
+          title: {
+            text: `￥+${amountAll1}`,
+            left: 'center',
+            top: 'center'
+          },
+          series: [
+            {
+              type: 'pie',
+              data: optionData1,
+              radius: ['40%', '70%'],
+              itemStyle: {
+                borderRadius: 5,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+            }
+          ]
+        })
+      }
     }
 
     wx.nextTick(update)
@@ -161,10 +250,18 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    this.setData({
+      startDatetime: options.startDatetime,
+      endDatetime: options.endDatetime,
+      openid: options.openid,
+      share: !!options.share,
+      shareUrl: `startDatetime=${options.startDatetime}&endDatetime=${options.endDatetime}&opneid=${options.openid}&share=true`
+    })
     callCloudFunction('getBill', {
       startDatetime: Number(options.startDatetime),
-      date: Number(options.endDatetime)
-    }).then(res => {
+      date: Number(options.endDatetime),
+      openid: options.openid
+    }, false).then(res => {
       let bill = {}
       res.result.arr.reverse().map(ele => {
         let billDatetime = ele.bill_date
@@ -178,7 +275,7 @@ Page({
       Object.keys(bill).forEach(ele => {
         let obj = {}
         bill[ele].forEach(element => {
-          let tempDate = `${ new Date(element.bill_date).getDate()} ${this.getWeek(element.bill_date)}`
+          let tempDate = `${new Date(element.bill_date).getDate()} ${this.getWeek(element.bill_date)}`
           if (obj[tempDate] === undefined) {
             obj[tempDate] = []
           }
@@ -192,6 +289,45 @@ Page({
       console.log(bill);
       this.getBillValue(bill)
     })
+
+    callCloudFunction('getEmail', {
+      openid: options.openid
+    }, false).then(res => {
+      console.log(res);
+      this.setData({
+        emailList: res.result.emailList.data
+      })
+    })
+
+    this.setData({
+      fn: this.throttle(this.showBtn, 100)
+    })
+  },
+
+  throttle(fn, delay) {
+    let last = 0 // 上次触发时间
+    return function (...args) {
+      const now = Date.now()
+      if (now - last > delay) {
+        last = now
+        fn.apply(this, args)
+      }
+    }
+  },
+
+  showBtn(ev) {
+    if (!this.data.share) {
+      if (ev.scrollTop > 100) {
+        this.setData({
+          btnShow: true
+        })
+      } else {
+        this.setData({
+          btnShow: false
+        })
+      }
+    }
+
   },
 
   /**
@@ -239,12 +375,18 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
+  onShareAppMessage(res) {
+    console.log('share');
     if (res.from === 'button') {
       return {
-        title: `${wx.getStorageSync('userInfo').nickName} 账单明细`,
-        path: `/pages/chart/chart?openid=${this.data.openid}`
+        title: `${wx.getStorageSync('userInfo').nickName} ${new Date(Number(this.data.startDatetime)).getFullYear()}年${new Date(Number(this.data.endDatetime)).getMonth() + 1}月账单明细`,
+        path: `/pages/share/share?${this.data.shareUrl}`,
+        imageUrl: '../../images/thumbs.webp'
       }
     }
+  },
+
+  onPageScroll(ev) {
+    this.data.fn(ev)
   }
 })

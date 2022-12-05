@@ -1,161 +1,107 @@
 <!--pages/detail/detail.wxml-->
+<view wx:if="{{isInit}}">
+  <view wx:if="{{token}}">
 
-
-<view class='header'>
-  <view class='current-date'>
-    <view wx:if="{{startDateZH != '1990-01'}}">
-      {{startDateZH}}
-    </view>
-    <view wx:if="{{startDateZH != '1990-01'}}">
-      -
-    </view>
-      
-    <view>
-      {{endDateZH}}
-    </view>
-      
-    <view bindtap='handleOpenPopup'>
-      +
-    </view>
-  </view>
-</view>
-<view class='main' >
-  <view wx:for="{{bill}}" wx:for-index="key1" wx:for-item="value1" >
-    <view class='top'>
-      <view>
-        {{billStatistic[key1].date}}
-      </view>
-      <view data-date="{{billStatistic[key1].date}}" bindtap='handleShare'>
-        分享
-      </view>
-      <view class='amount'>
-        <view>
-          支出：{{billStatistic[key1].amount0}}
-        </view>
-        <view>
-          收入：{{billStatistic[key1].amount1}}
-        </view>
-      </view>
-    </view>
-    <view  wx:for="{{value1}}" wx:for-index="key2" wx:for-item="value2"  >
-      <view class='bill-item-top'>
-        <view>
-          {{billStatistic[key1][key2].date}}
-        </view>
-        <view class='bill-item-top-amount'>
-          <view>
-            -{{billStatistic[key1][key2].amount0}}
+    <view class='header'>
+        <view class='current-date bg-gradual-orange padding'>
+          <view wx:if="{{startDateZH != '1990-01'}}">
+            {{startDateZH}}
           </view>
-          <view>
-            +{{billStatistic[key1][key2].amount1}}
-          </view>
-        </view>
-      </view>
-        
-      <view class='bill-item' bindtap='toInfo' data-info='{{value3}}'  wx:for="{{value2}}" wx:for-index="key3" wx:for-item="value3">
-        <view>
-          {{value3.category}}
-        </view>
-          
-        <view class='mode-amount'>
-          <view wx:if='{{value3.mode === 1}}'>
-            +
-          </view>
-          <view wx:else>
+          <view wx:if="{{startDateZH != '1990-01'}}">
             -
           </view>
-          <view class='amount-num'>
-            {{value3.amount}}
+            
+          <view>
+            {{endDateZH}}
+          </view>
+            
+          <view bindtap='handleOpenPopup' class="arrow {{popupShow ? 'arrow1' : 'arrow0'}}">
+            <text class="cuIcon-unfold lg"></text>
           </view>
         </view>
+    </view>
+
+    <view class='main'>
+      <virtual-list bill="{{billAll}}" wx:if='{{billAll.length}}'></virtual-list>
+      <view class='text-center none-bill' wx:else>
+        暂无数据 ~
       </view>
+        
+    </view>
+
+    <view class='detail-popup'>
+      <van-popup
+      show="{{ popupShow }}"
+      close-on-click-overlay='true'
+      bind:click-overlay='handleOverlay'
+      position="bottom"
+      round
+      custom-style="height: 60%;">
+        <view class='detail-tabs'>
+          <van-tabs wx:if="{{tabsShow}}" animated swipeable active="{{ dateActive }}" bind:change='handleDateChange' >
+            <van-tab name="0" title="年月份">
+              <view class='detail-picker' >
+                <van-datetime-picker
+                  show-toolbar="{{false}}"
+                  type="year-month"
+                  value="{{ endDatetime }}"
+                  min-date="{{ minDate }}"
+                  max-date="{{ maxDate }}"
+                  bind:input='handleDateInput'
+                  />
+              </view>
+            </van-tab>
+            <van-tab name="1" title="自定义">
+              <view class='popup-datetime'>
+                <view class='popup-datetime-range'>
+                <button class="date0 cu-btn line-red shadow" data-index='1' bindtap='handleDatetimeRange'>{{tempStartDatetimeZH}}</button>
+                <view class='line'></view>
+                <button class="date0 cu-btn line-red shadow" data-index='2' bindtap='handleDatetimeRange'>{{tempEndDatetimeZH}}</button>
+                </view>
+                <view class='popup-detetime-btn'>
+                  <button class="cu-btn linebordersize-{{btnActive == 1 ? 'red' : 'grey'}} shadow btn" data-index='1' bindtap='handleDateFast'>今年</button>
+                  <button class="cu-btn linebordersize-{{btnActive == 2 ? 'red' : 'grey'}} shadow btn" data-index='2' bindtap='handleDateFast'>上一年</button>
+                  <button class="cu-btn linebordersize-{{btnActive == 3 ? 'red' : 'grey'}} shadow btn" data-index='3' bindtap='handleDateFast'>近三个月</button>
+                  <button class="cu-btn linebordersize-{{btnActive == 4 ? 'red' : 'grey'}} shadow btn" data-index='4' bindtap='handleDateFast'>近半年</button>
+                  <button class="cu-btn linebordersize-{{btnActive == 5 ? 'red' : 'grey'}} shadow" data-index='5' bindtap='handleDateFast'>近一年</button>
+                </view>
+                  <van-popup
+                    show="{{ popupDateShow }}"
+                    round
+                    overlay='{{false}}'
+                    position="bottom"
+                    custom-style="height: 45%">
+                    <view class='popup-datetime-picker' >
+                        <van-datetime-picker
+                          show-toolbar="{{false}}"
+                          type="date"
+                          value="{{ dateType == 1 ? tempStartDatetime : tempEndDatetime }}"
+                          minDate="{{ dateType == 1 ? minDate : tempStartDatetime }}"
+                          maxDate="{{ dateType == 1 ? tempEndDatetime : maxDate }}"
+                          bind:input="handleDatetimeInput"
+                        />
+                    </view>
+                  </van-popup>
+              </view>
+            </van-tab>
+          </van-tabs>
+        </view>
+        <view class='detail-btn'>
+          <text class="detail-btn-item1 cuIcon-close lg" bindtap='handlePopupClose'></text>
+          <text class="detail-btn-item2 cuIcon-check lg" bindtap='handlePopupConfirm'></text>
+        </view>
+      </van-popup>
     </view>
   </view>
+  <view wx:else>
+    <image class="detail-image" src="../../images/temp/temp0.png" mode="aspectFit" lazy-load="false" binderror="" bindload=""></image>
+  </view>
 </view>
-
-<view class='detail-popup'>
-  <van-popup
-  show="{{ popupShow }}"
-  close-on-click-overlay='true'
-  bind:click-overlay='handleOverlay'
-  position="bottom"
-  round
-  custom-style="height: 50%;">
-    <view class='detail-tabs'>
-      <van-tabs animated swipeable active="{{ dateActive }}" bind:change='handleDateChange'  >
-        <van-tab name="0" title="年月份">
-          <view class='detail-picker' >
-            <van-datetime-picker
-              type="year-month"
-              value="{{ endDatetime }}"
-              min-date="{{ minDate }}"
-              max-date="{{ maxDate }}"
-              bind:input='handleDateInput'
-              />
-          </view>
-        </van-tab>
-        <van-tab name="1" title="自定义">
-          <view class='popup-datetime'>
-            <view class='popup-datetime-range'>
-              <view data-index='1' bindtap='handleDatetimeRange'> 
-                {{tempStartDatetimeZH}}
-              </view>
-                -
-              <view data-index='2' bindtap='handleDatetimeRange'>
-                {{tempEndDatetimeZH}}
-              </view>
-            </view>
-            <view class='popup-detetime-btn'>
-              <view data-index='1' bindtap='handleDateFast'>
-                今年
-              </view>
-              <view data-index='2' bindtap='handleDateFast'>
-                上一年
-              </view>
-              <view data-index='3' bindtap='handleDateFast'>
-                近三个月
-              </view>
-              <view data-index='4' bindtap='handleDateFast'>
-                近半年
-              </view>
-              <view data-index='5' bindtap='handleDateFast'>
-                近一年
-              </view>
-            </view>
-              <van-popup
-                show="{{ popupDateShow }}"
-                round
-                overlay='{{false}}'
-                position="bottom"
-                custom-style="height: 30%">
-                <view class='popup-datetime-picker' >
-                    <van-datetime-picker
-                      type="date"
-                      value="{{ dateType == 1 ? tempStartDatetime : tempEndDatetime }}"
-                      minDate="{{ dateType == 1 ? minDate : tempStartDatetime }}"
-                      maxDate="{{ dateType == 1 ? tempEndDatetime : maxDate }}"
-                      bind:input="handleDatetimeInput"
-                    />
-                </view>
-              </van-popup>
-          </view>
-        </van-tab>
-      </van-tabs>
-    </view>
-    <view class='detail-btn' >
-      <view class='detail-btn-item1' bindtap='handlePopupClose'>
-        x
-      </view>
-      <view class='detail-btn-item2' bindtap='handlePopupConfirm'>
-        √
-      </view> 
-    </view>
-      
-  </van-popup>
+<view wx:else>
 </view>
-
-
+ 
 <view>
   <van-dialog id="detail-dialog" />
   <van-notify id="detail-notify" />
+  <van-toast id="detail-toast" />
 </view>

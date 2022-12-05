@@ -1,6 +1,7 @@
 // pages/record/record.jscategoryName
 import { callCloudFunction } from '../../utils/cloud_helper'
 import { formatDate } from '../../utils/format_date'
+import Toast from '@vant/weapp/toast/toast';
 
 Page({
 
@@ -14,13 +15,15 @@ Page({
     categoriesList1: [],
     categoryName0: '三餐',
     categoryName1: '工资',
+    categoryIcon0: 'https://636c-cloud1-9gy06h7v3cd9add3-1314052338.tcb.qcloud.la/cloudbase-cms/upload/2022-10-18/0zn6uo2j0lcpz5llgfm64jpqjofztc48_.png',
+    categoryIcon1: 'https://636c-cloud1-9gy06h7v3cd9add3-1314052338.tcb.qcloud.la/cloudbase-cms/upload/2022-10-18/leu35j9pqcdc9tfnimbcsfsg8dyd6mg4_.png',
     loading: true,
     height: '',
     popupNoteShow: false,
     popupDateShow: false,
     popupAddShow: false,
     note: '',
-    currentDate: formatDate(new Date().getTime(), 'YY-MM-DD'),
+    currentDate: formatDate(new Date().getTime(), 'YY/MM/DD'),
     currentWeek: null,
     maxDate: new Date().getTime(),
     minDate: new Date('1990-01-01').getTime(),
@@ -40,9 +43,11 @@ Page({
       category: null,
       mode: null,
       note: '',
+      icon: '',
     },
     billId: '',
-    isUpdate: false
+    isUpdate: false,
+    tempDate: 0
   },
 
   getCurrentWeek(datetime) {
@@ -100,7 +105,6 @@ Page({
   },
   // 处理数字
   handleNumberKey(num) {
-
     let temp = this.data.num + num
 
     if (num === '.' && this.data.num === '') {
@@ -123,6 +127,7 @@ Page({
   },
   // 确认键
   handleConfirmKey() {
+    getApp().globalData.isUpdate = true
     let amount = Number(this.data.num)
     if (amount !== 0) {
       this.setData({
@@ -130,9 +135,17 @@ Page({
         ['billInfo.mode']: this.data.mode,
         ['billInfo.amount']: amount,
         ['billInfo.note']: this.data.note,
-        ['billInfo.category']: this.data.mode ? this.data.categoryName1 : this.data.categoryName0
+        ['billInfo.category']: this.data.mode ? this.data.categoryName1 : this.data.categoryName0,
+        ['billInfo.icon']: this.data.mode ? this.data.categoryIcon1 : this.data.categoryIcon0
       })
       console.log(this.data.billInfo)
+
+      getApp().globalData.toast = Toast.loading({
+        forbidClick: true,
+        duration: 0,
+        selector: '#record-toast'
+      });
+
       if (this.data.isUpdate) {
         this.setData({
           ['billInfo._id']: this.data.billId,
@@ -142,6 +155,7 @@ Page({
 
         callCloudFunction('updateBill', this.data.billInfo).then(res => {
           if (res) {
+            getApp().globalData.toast.clear()
             this.setData({
               popupAddShow: true,
             })
@@ -150,6 +164,7 @@ Page({
       } else {
         callCloudFunction('addBill', this.data.billInfo).then(res => {
           if (res) {
+            getApp().globalData.toast.clear()
             this.setData({
               popupAddShow: true,
             })
@@ -163,9 +178,7 @@ Page({
   handleCategoriesContainenrHeight() {
     wx.getSystemInfo({
       success: res => {
-        let tabbarHeight = res.screenHeight - res.safeArea.bottom + 50
-        let height = res.screenHeight - tabbarHeight - 50
-
+        let height = (res.windowHeight - 450) * res.pixelRatio
         this.setData({
           height: `height: ${height}rpx`,
         })
@@ -177,6 +190,7 @@ Page({
     let dataset = e.currentTarget.dataset
     this.setData({
       [`categoryName${dataset.mode}`]: dataset.name,
+      [`categoryIcon${dataset.mode}`]: dataset.icon,
     })
   },
 
@@ -224,14 +238,20 @@ Page({
     })
   },
 
-  handleConfirmDate(e) {
+  handleDateInput(e) {
+    this.setData({
+      tempDate: e.detail
+    })
+  },
+
+  handleConfirmDate() {
     this.setData({
       popupDateShow: false,
-      currentDate: formatDate(e.detail, 'YY-MM-DD'),
-      ['billInfo.billDate']: e.detail,
+      currentDate: formatDate(this.data.tempDate, 'YY/MM/DD'),
+      ['billInfo.billDate']: this.data.tempDate,
     })
 
-    this.getCurrentWeek(e.detail)
+    this.getCurrentWeek(this.data.tempDate)
   },
 
   handleAddAgain() {
@@ -264,10 +284,24 @@ Page({
     return [arr0, arr1]
   },
 
+  handleOverlay() {
+    this.setData({
+      popupNoteShow: false,
+      popupDateShow: false,
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+
+    Toast.loading({
+      forbidClick: true,
+      duration: 1500,
+      selector: '#record-toast'
+    });
+
     this.setData({
       categoriesList0: getApp().globalData.categoriesList[0],
       categoriesList1: getApp().globalData.categoriesList[1]
@@ -288,7 +322,7 @@ Page({
         billId: options._id,
         ['billInfo.billDate']: new Date(options.bill_date).getTime(),
         [`categoryName${options.mode}`]: options.category,
-        currentDate: formatDate(options.bill_date, 'YY-MM-DD'),
+        currentDate: formatDate(options.bill_date, 'YY/MM/DD'),
         currentWeek: this.getCurrentWeek(options.bill_date)
       })
       console.log(options)

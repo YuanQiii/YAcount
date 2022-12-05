@@ -1,58 +1,52 @@
 /* pages/detail/detail.wxss */
+
 .header {
     display: flex;
     justify-content: space-between;
+    position: fixed;
+    width: 100vw;
+    z-index: 9999;
+    top: 0;
 }
 
 .current-date {
     display: flex;
     width: 100%;
-    background-color: aqua;
-    height: 70rpx;
-    line-height: 70rpx;
+    font-size: 40rpx;
+    margin-bottom: 10rpx;
+    height: 100rpx;
+    align-items: center
+}
+
+.main {
+    margin-top: 100rpx;
+}
+
+.arrow {
+    transition: .5s;
+    -webkit-transition: .5s;
+    -moz-transition: .5s;
+    -ms-transition: .5s;
+    -o-transition: .5s;
+}
+
+.arrow0 {
+    margin-left: 20rpx;
+}
+
+.arrow1 {
+    margin-left: 20rpx;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
 }
 
 .current-amount {
     display: flex;
 }
 
-.top {
-    display: flex;
-    justify-content: space-between;
-    background-color: antiquewhite;
-    height: 70rpx;
-    line-height: 70rpx;
-}
-
-.bill-item-top {
-    display: flex;
-    justify-content: space-between;
-    background-color: sandybrown;
-}
-
-.bill-item-top-amount {
-    display: flex;
-}
-
-.bill-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20rpx;
-    margin-top: 10rpx;
-    border-bottom: solid 2rpx gray;
-}
-
-.amount {
-    display: flex;
-}
-
-.mode-amount {
-    display: flex;
-}
-
-.amount-num {
-    text-align: right;
-}
 
 .detail-popup {
     position: relative;
@@ -75,15 +69,17 @@
 .detail-btn-item1 {
     margin-left: 30rpx;
     margin-top: 20rpx;
+    font-size: 40rpx;
 }
 
 .detail-btn-item2 {
     margin-right: 30rpx;
     margin-top: 20rpx;
+    font-size: 40rpx;
 }
 
 .detail-picker {
-    padding-top: 50rpx;
+    margin-top: 15%;
 }
 
 .popup-datetime {
@@ -94,10 +90,46 @@
 
 .popup-datetime-range {
     display: flex;
-    margin-top: 50rpx;
+    margin-top: 30rpx;
+    align-items: center;
 }
 
 .popup-detetime-btn {
     text-align: center;
-    margin-top: 80rpx;
+    margin-top: 40rpx;
+    display: flex;
+    flex-direction: column;
+    width: 400rpx;
+}
+
+.line {
+    width: 30rpx;
+    height: 5rpx;
+    display: inline-block;
+    background-color: #e54d42;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+}
+
+.date0 {
+    font-size: 30rpx;
+}
+
+.btn {
+    margin-bottom: 30rpx;
+}
+
+.detail-note {
+    font-size: 22rpx;
+    margin-left: 20rpx;
+}
+
+.detail-image {
+    width: 1024rpx;
+    height: 1024rpx;
+}
+
+.none-bill{
+    margin-top: 200rpx;
+    font-size: 35rpx;
 }

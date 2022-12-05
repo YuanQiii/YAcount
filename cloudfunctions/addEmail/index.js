@@ -37,12 +37,12 @@ exports.main = async (event, context) => {
     });
 
     let mailOptions = {
-      from: '"源记账" <934024048@qq.com>', // sender address
+      from: '"YAccount" <934024048@qq.com>', // sender address
       to: event.email, // list of receivers
-      subject: '源记账邮箱安全验证', // Subject line
+      subject: 'YAccount邮箱安全验证', // Subject line
       // 发送text或者html格式
       // text: 'Hello world?', // plain text body
-      html: `<b>【源记账】 ${code} （邮箱验证码，请完成验证）5分钟内有效，欢迎使用源记账，如非本人操作，请忽略本邮件</b>` // html body
+      html: `<b>【YAccount】 ${code} （邮箱验证码，请完成验证）5分钟内有效，欢迎使用YAccount，如非本人操作，请忽略本邮件</b>` // html body
     };
    
     // send mail with defined transport object
@@ -61,6 +61,8 @@ exports.main = async (event, context) => {
 
   if(event.type == 'check'){
     let flag = false
+    console.log('event.code', event.code);
+    console.log('code', code);
     if(code == event.code && code !== ''){
       flag = true
       timer = null

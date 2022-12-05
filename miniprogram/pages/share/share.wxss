@@ -1,27 +1,112 @@
 /* pages/share/share.wxss */
-.bill-item{
+.bill-item {
     display: flex;
     justify-content: space-between;
+    padding-left: 40rpx;
+    border-bottom: solid 1rpx grey;
 }
-.bill-left{
+
+.bill-left {
     display: flex;
+    align-items: center;
 }
-.bill-note{
+
+.bill-note {
     margin-left: 40rpx;
+    font-size: 20rpx;
 }
 
-.bill-amount{
+.bill-amount {
     display: flex;
+    align-items: center;
 }
 
-.mychart-dom-bar0{
+.mychart-dom-bar0 {
     width: 100vw;
     height: 100vh;
     margin-top: -25vh;
-    
+
 }
-.mychart-dom-bar1{
+
+.mychart-dom-bar1 {
     width: 100vw;
     height: 100vh;
     margin-top: -50vh;
+}
+
+.bottom {
+    display: flex;
+    justify-content: space-evenly;
+    padding-bottom: 80rpx;
+    position: fixed;
+    top: 90vh;
+    width: 100vw;
+    transition: .5s;
+    -webkit-transition: .5s;
+    -moz-transition: .5s;
+    -ms-transition: .5s;
+    -o-transition: .5s;
+}
+
+.share-bottom {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+
+.share-list {
+    margin-top: -25vh;
+}
+
+.share-btn0 {
+    width: 30vw;
+}
+
+.share-btn1 {
+    width: 60vw;
+}
+
+.popup-btn {
+    width: 80vw;
+    margin-top: 30rpx;
+}
+
+.btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.email-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.email-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 360rpx;
+    padding-top: 40rpx;
+}
+
+.email-list-item {
+    width: 80vw;
+    margin-top: 20rpx;
+    text-align: center;
+    font-size: 30rpx;
+    border-bottom: solid 1rpx gray;
+    padding-bottom: 10rpx;
+}
+
+.share-btn-close {
+    margin: 0 auto;
+    margin-top: 60rpx;
+}
+
+.share-btn-close0 {
+    width: 80vw;
 }

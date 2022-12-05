@@ -11,7 +11,7 @@
     "backgroundColor": "#FFF",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFFF",
-    "navigationBarTitleText": "Keep-Booking",
+    "navigationBarTitleText": "YAccount",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",

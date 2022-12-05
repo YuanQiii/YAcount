@@ -7,11 +7,12 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV }) // 使用当前云环境
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext()
   const db = cloud.database()
+  let openid = event.openid || wxContext.OPENID
 
   let emailList = []
 
   await db.collection('user').where({
-    openid: wxContext.OPENID
+    openid
   }).get().then(async res => {
     await db.collection('email').where({
       openid: res.data[0]._id

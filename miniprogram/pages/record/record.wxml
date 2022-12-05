@@ -6,13 +6,12 @@
       <van-tab name="0" title="支出">
         <view class="categories" style="{{height}}">
           <view style="opacity: {{loading ? 0 : 1}}">
-          
             <view class='category-container'>
-              <view class="category-box {{categoryName0 === item.name ? 'select' : '' }}" bindtap='handleSelectCategory' data-mode='0' data-name='{{item.name}}' data-index='{{index+1}}' wx:for="{{ categoriesList0 }}">
-                <view bindtap='handleSelectCategory'>
-                    <van-icon name="like" />
+              <view class="category-box {{categoryName0 === item.name ? 'select' : '' }}" bindtap='handleSelectCategory' data-mode='0' data-icon="{{item.icon}}" data-name='{{item.name}}' data-index='{{index+1}}' wx:for="{{ categoriesList0 }}">
+                <view>
+                    <van-image width="30" height="30" src="{{item.icon}}" />
                 </view>
-                <view bindtap='handleSelectCategory'>
+                <view>
                     {{item.name}}
                 </view>
               </view>
@@ -25,11 +24,11 @@
         <view class="categories" style="{{height}}" bindtap='handleSelectCategory'>
           <view style="opacity: {{loading ? 0 : 1}}">
             <view class='category-container'>
-              <view class="category-box {{categoryName1 === item.name ? 'select' : '' }}" bindtap='handleSelectCategory' data-mode='1' data-name='{{item.name}}' data-index='{{index+1}}' wx:for="{{ categoriesList1 }}">
-                <view bindtap='handleSelectCategory'>
-                    <van-icon name="like" />
+              <view class="category-box {{categoryName1 === item.name ? 'select' : '' }}" bindtap='handleSelectCategory' data-mode='1' data-icon="{{item.icon}}" data-name='{{item.name}}' data-index='{{index+1}}' wx:for="{{ categoriesList1 }}">
+                <view>
+                  <van-image width="30" height="30" src="{{item.icon}}" />
                 </view>
-                <view bindtap='handleSelectCategory'>
+                <view>
                     {{item.name}}
                 </view>
               </view>
@@ -39,82 +38,95 @@
       </van-tab>
     </van-tabs>
   </view>
+
   <!-- 金额 -->
-  <view class="bill" style="color: {{mode == 1 ? 'green' : 'red'}}">
+  <view class="bill" style="color: {{mode == 1 ? '#1cbbb4' : '#f37b1d'}}">
     <view class='bill-icon'>￥</view>
-    <view class='bill-input'></view>
     <view class='bill-input-text'>
-    <view class=''>
-    {{num}}
-    </view>
-    <view class='bill-input-cursor'></view></view>
-    
-  </view>
-  <view class="note">
-    <view class="note-container">
-      <view bindtap='handleAddNote'>添加备注</view>
-      <view bindtap='handleAddDate'>{{currentDate}} {{currentWeek}}</view>
+        <view class=''>
+        {{num}}
+        </view>
+      <view class='bill-input-cursor'></view>
+      <view class='bill-input-line'></view>
+        
     </view>
   </view>
+
   <!-- 数字键盘 -->
-  <view class="key-container">
-    <view class="keyboard" bindtap="handleKeyPress">
-      <view class="key-row">
-        <view class="key-cell" data-num="7">7</view>
-        <view class="key-cell" data-num="8">8</view>
-        <view class="key-cell" data-num="9">9</view>
-        <view class="key-cell" data-num=""></view>
+  <view class="key-container" bindtap="handleKeyPress">
+    <view class="note-container">
+      <button class='note-btn cu-btn linebordersize-grey shadow' bindtap='handleAddNote'>添加备注</button>
+      <button class='note-btn cu-btn linebordersize-grey shadow' bindtap='handleAddDate'>{{currentDate}} {{currentWeek}}</button>
+    </view>
+    <view class='key'>
+      <view class='key-row-left'>
+        <view class="key-row">
+          <button class="key-cell key-left  cu-btn linebordersize-grey shadow" data-num="7">7</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="8">8</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="9">9</button>
+        </view>
+        <view class="key-row">
+          <button class="key-cell key-left cu-btn linebordersize-grey shadow" data-num="4">4</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="5">5</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="6">6</button>
+        </view>
+        <view class="key-row">
+          <button class="key-cell key-left cu-btn linebordersize-grey shadow" data-num="1">1</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="2">2</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="3">3</button>
+        </view>
+        <view class="key-row">
+          <button class="key-cell key-left cu-btn linebordersize-grey shadow" data-num=".">.</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="0">0</button>
+          <button class="key-cell cu-btn linebordersize-grey shadow" data-num="D">删除</button>
+        </view>
       </view>
-      <view class="key-row">
-        <view class="key-cell" data-num="4">4</view>
-        <view class="key-cell" data-num="5">5</view>
-        <view class="key-cell" data-num="6">6</view>
-        <view class="key-cell" data-num=""></view>
+      <view class='key-row-right'>
+        <button class="key-clear cu-btn linebordersize-grey shadow" data-num="C">清空</button>
+        <button class="key-confirm cu-btn linebordersize-grey shadow" data-num="S">确定</button>
       </view>
-      <view class="key-row">
-        <view class="key-cell" data-num="1">1</view>
-        <view class="key-cell" data-num="2">2</view>
-        <view class="key-cell" data-num="3">3</view>
-        <view class="key-cell" data-num=""></view>
-      </view>
-      <view class="key-row">
-        <view class="key-cell" data-num=".">.</view>
-        <view class="key-cell" data-num="0">0</view>
-        <view class="key-cell" data-num="D">删除</view>
-        <view class="key-cell" data-num=""></view>
-      </view>
-      <view class="key-clear" data-num="C">清空</view>
-      <view class="key-confirm" data-num="S">确定</view>
     </view>
   </view>
+
   <!-- 提示以及对话框 -->
   <view>
     <van-dialog id="record-dialog" />
     <van-notify id="record-notify" />
-    <view style="display: {{loading ? 'flex' : 'none'}}" class="loading">
-      <van-loading color="#1989fa" />
-    </view>
-    <van-popup show="{{ popupNoteShow }}" round position="bottom" custom-style="height: 60%">
+    <van-toast id="record-toast" />
+    <van-popup show="{{ popupNoteShow }}" round position="bottom" custom-style="height: 60%" bind:click-overlay='handleOverlay'>
       <view class="popup-top">
-        <view class="popup-top-left" bindtap='handlePopupNoteClose'>取消</view>
-        <view>请输入备注</view>
-        <view class="popup-top-right" bindtap='handlePopupNoteSubmit'>确认</view>
+        <view class='btn'>
+          <van-icon class='btn0' name="close" bindtap="handlePopupNoteClose" />
+          <view class='btn-text'>
+            请输入备注
+          </view>
+          <van-icon class='btn1' name="passed" bindtap="handlePopupNoteSubmit" />
+        </view>
       </view>
       <view class="popup-container">
         <van-field value="{{ note }}" placeholder="请输入备注（0-15）" bind:change="handleNoteChange" clearable maxlength="{{15}}" />
       </view>
     </van-popup>
-    <van-popup show="{{ popupDateShow }}" round position="bottom" custom-style="height: 40%">
-      <van-datetime-picker title='账单时间' type="date" value="{{ billInfo.billDate }}" min-date="{{minDate}}" max-date="{{ maxDate }}" formatter="{{ formatter }}" bind:cancel="handleCancelDate" bind:confirm="handleConfirmDate" />
+    <van-popup show="{{ popupDateShow }}" round position="bottom" custom-style="height: 40%" bind:click-overlay='handleOverlay'>
+      <view class='btn'>
+        <van-icon class='btn0' name="close" bindtap="handleCancelDate" />
+        <view class='btn-text'>
+          账单时间
+        </view>
+        <van-icon class='btn1' name="passed" bindtap="handleConfirmDate" />
+      </view>
+      <view>
+        <van-datetime-picker bind:input="handleDateInput" type="date" value="{{ billInfo.billDate }}" min-date="{{minDate}}" max-date="{{ maxDate }}" formatter="{{ formatter }}" />
+      </view>
     </van-popup>
     <van-popup show="{{ popupAddShow }}" round position="bottom" custom-style="height: 30%">
       <view class="add-conteiner">
         <view>
-          <van-icon name="checked" color="green" />
+          <van-icon style='font-size: 60rpx' name="checked" color="#39b54a" />
         </view>
-        <view bindtap='handleAddAgain'>再记一笔</view>
-        <view bindtap='handleToDetail'>查看流水</view>
-        <view bindtap='handleAddAgain'>关闭</view>
+        <button class="add-btn cu-btn linebordersize-gray shadow" bindtap='handleAddAgain'>再记一笔</button>
+        <button class="add-btn cu-btn linebordersize-gray shadow" bindtap='handleToDetail'>查看流水</button>
+        <button class="add-btn cu-btn linebordersize-gray shadow" bindtap='handleAddAgain'>关闭</button>
       </view>
     </van-popup>
   </view>

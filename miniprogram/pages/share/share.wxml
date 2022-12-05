@@ -1,18 +1,19 @@
 <!--pages/share/share.wxml-->
 
 <view class="container">
-  <ec-canvas class="mychart-dom-bar0" canvas-id="mychart-bar0" ec="{{ ec0 }}"></ec-canvas>
-  <ec-canvas class="mychart-dom-bar1" canvas-id="mychart-bar1" ec="{{ ec1 }}"></ec-canvas>
+  <ec-canvas id='mychart-dom-save0' class="mychart-dom-bar0" canvas-id="mychart-bar0" ec="{{ ec0 }}"></ec-canvas>
+  <ec-canvas id='mychart-dom-save1' class="mychart-dom-bar1" canvas-id="mychart-bar1" ec="{{ ec1 }}"></ec-canvas>
 </view>
 
-<view>
+<view class='share-list'>
   <view wx:for="{{billList}}" wx:for-item="item1" wx:for-index="index1">
     <view wx:for="{{item1}}"  wx:for-item="item2" wx:for-index="index2">
-      <view>
+      <view class="bg-gradual-blue padding text-center">
         {{index1}}/{{index2}}
       </view>
-      <view class="bill-item" wx:for="{{item2}}" wx:for-item="item3" wx:for-index="index3">
+      <view class="bill-item bg-white padding shadow-blur light" wx:for="{{item2}}" wx:for-item="item3" wx:for-index="index3">
         <view class="bill-left">
+          <van-image style='margin-right: 20rpx' width="30" height="30" src="{{item3.icon}}" />
           <view>
             {{item3.category}}
           </view>
@@ -36,13 +37,17 @@
   </view>
 </view>
 
-<view>
-  <view bindtap="handleShare">
+<view class="share-bottom bg-white padding shadow-blur light">
+  到底了~
+</view>
+
+<view style="top: {{btnShow ? '90vh' : '120vh'}}" class='bottom bg-white padding radius text-center shadow-blur'>
+  <button class="share-btn0 cu-btn linebordersize-grey shadow" bindtap="handleShare">
     分享
-  </view>
-  <view bindtap="handleExcel">
+  </button>
+  <button class="share-btn1 cu-btn linebordersize-grey shadow" bindtap="handleExcel">
     发送Excel到邮箱
-  </view>
+  </button>
 </view>
 
 <view class="share-popup">
@@ -52,13 +57,41 @@
   bind:click-overlay='handleOverlay'
   position="bottom"
   round
-  custom-style="height: 20%;">
-    <button open-type="share">分享给好友</button>
-    <view bindtap='handleSave'>
-      保存图片
-    </view>
-    <view bindtap='handleOverlay'>
-      关闭
+  custom-style="height: 30%;">
+    <view class='btn'>
+      <button class="popup-btn cu-btn linebordersize-grey shadow" open-type="share">分享给好友</button>
+      <button class="popup-btn cu-btn linebordersize-grey shadow" bindtap='handleSave'>
+        保存图片
+      </button>
+      <button class="popup-btn cu-btn linebordersize-grey shadow" bindtap='handleOverlay'>
+        关闭
+      </button>
     </view>
   </van-popup>
 </view>
+
+<view class="email-popup">
+  <van-popup
+  show="{{ popupEmailShow }}"
+  close-on-click-overlay='true'
+  bind:click-overlay='handleOverlay'
+  position="bottom"
+  round
+  custom-style="height: 40%;">
+    <view class='email-container'>
+      <view class="email-main" >
+        <view class="email-list-item" wx:for='{{emailList}}' data-address="{{item.address}}" bindtap='chooseEmail'>
+          {{item.address}}
+        </view>
+      </view>
+      <view class="share-btn-close" bindtap='handleOverlay'>
+        <button class="share-btn-close0 cu-btn linebordersize-grey shadow">
+          关闭
+        </button>
+      </view>
+    </view>
+  </van-popup>
+</view>
+
+
+<van-toast id="share-toast" />

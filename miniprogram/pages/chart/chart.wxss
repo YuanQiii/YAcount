@@ -4,6 +4,11 @@ page {
     background-color: #f7f7f7;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
 .mychart-dom-bar {
     width: 100vw;
     height: 100vh;
@@ -21,9 +26,7 @@ page {
 .current-date {
     display: flex;
     width: 100%;
-    background-color: aqua;
-    height: 70rpx;
-    line-height: 70rpx;
+    font-size: 40rpx;
     z-index: 9999;
 }
 
@@ -56,7 +59,7 @@ page {
 }
 
 .detail-picker {
-    padding-top: 50rpx;
+    margin-top: 15%;
 }
 
 .popup-datetime {
@@ -67,12 +70,8 @@ page {
 
 .popup-datetime-range {
     display: flex;
-    margin-top: 50rpx;
-}
-
-.popup-detetime-btn {
-    text-align: center;
-    margin-top: 80rpx;
+    margin-top: 30rpx;
+    align-items: center;
 }
 
 .chart-progress {
@@ -92,6 +91,74 @@ page {
     margin-bottom: 20rpx;
 }
 
-.chart-progress-line{
-    /* width: 80vw; */
+.popup-detetime-btn {
+    text-align: center;
+    margin-top: 40rpx;
+    display: flex;
+    flex-direction: column;
+    width: 400rpx;
+}
+
+.line {
+    width: 30rpx;
+    height: 5rpx;
+    display: inline-block;
+    background-color: #e54d42;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+}
+
+.date0 {
+    font-size: 30rpx;
+}
+
+.btn {
+    margin-bottom: 30rpx;
+}
+
+.arrow {
+    transition: .5s;
+    -webkit-transition: .5s;
+    -moz-transition: .5s;
+    -ms-transition: .5s;
+    -o-transition: .5s;
+}
+
+.arrow0 {
+    margin-left: 20rpx;
+}
+
+.arrow1 {
+    margin-left: 20rpx;
+    transform: rotate(180deg);
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+}
+
+.detail-btn {
+    width: 100vw;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.detail-btn-item1 {
+    margin-left: 30rpx;
+    margin-top: 20rpx;
+    font-size: 40rpx;
+}
+
+.detail-btn-item2 {
+    margin-right: 30rpx;
+    margin-top: 20rpx;
+    font-size: 40rpx;
+}
+
+.detail-image {
+    width: 1024rpx;
+    height: 1024rpx;
 }

@@ -2,6 +2,7 @@
 import * as echarts from '../../ec-canvas/echarts'
 import { callCloudFunction } from '../../utils/cloud_helper'
 import { formatDate } from '../../utils/format_date'
+import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast';
 
 let chart = null
 
@@ -14,7 +15,6 @@ function initChart(canvas, width, height, dpr) {
   })
 
   canvas.setChart(chart)
-  // chart.setOption({});
   return chart;
 }
 
@@ -46,8 +46,8 @@ Page({
 
     tempDate1: null,
 
-    startDateZH: formatDate(defaultStartDatetime, 'YY-MM'),
-    endDateZH: formatDate(defaultEndDatetime, 'YY-MM'),
+    startDateZH: formatDate(defaultStartDatetime, 'YY/MM'),
+    endDateZH: formatDate(defaultEndDatetime, 'YY/MM'),
     maxDate: new Date().getTime(),
     minDate: new Date('1990-01-01').getTime(),
     startDatetime: defaultStartDatetime,
@@ -66,12 +66,17 @@ Page({
 
     popupShow: false,
     popupDateShow: false,
+    tabsShow: false,
 
     bill: null,
     billStatistic: null,
 
     billData: [],
-    
+    btnActive: 0,
+
+    token: wx.getStorageSync('token'),
+    isInit: false
+
   },
 
   handleTabChange(e) {
@@ -114,6 +119,9 @@ Page({
   },
   handleDateFast(e) {
     let index = e.currentTarget.dataset.index
+    this.setData({
+      btnActive: index
+    })
     let start = null
     let end = null
     if (index == 1) {
@@ -176,6 +184,11 @@ Page({
     this.setData({
       popupShow: false,
     })
+    setTimeout(() => {
+      this.setData({
+        tabsShow: false,
+      })
+    }, 500);
   },
   handlePopupConfirm() {
     if (this.data.dateActive == 0) {
@@ -198,6 +211,14 @@ Page({
         queryDatetime: handleEndDatetime(this.data.tempEndDatetime),
         popupShow: false,
       })
+      this.setData({
+        btnActive: 0
+      })
+      setTimeout(() => {
+        this.setData({
+          tabsShow: false,
+        })
+      }, 500);
     }
     this.getBillList()
     this.setData({
@@ -323,10 +344,23 @@ Page({
     return arr[new Date(time).getUTCDay()]
   },
   handleOpenPopup() {
-    console.log(123);
     this.setData({
-      popupShow: true
+      popupShow: true,
+      tabsShow: true
     })
+  },
+  handleDatetimeInput(e) {
+    if (this.data.dateType == 2) {
+      this.setData({
+        tempEndDatetime: e.detail,
+        tempEndDatetimeZH: formatDate(e.detail, 'YY/MM/DD')
+      })
+    } else {
+      this.setData({
+        tempStartDatetime: e.detail,
+        tempStartDatetimeZH: formatDate(e.detail, 'YY/MM/DD')
+      })
+    }
   },
   getBillValue(bill, statistic) {
     let optionData = []
@@ -361,25 +395,29 @@ Page({
     })
 
     function update() {
-      chart.setOption({
-        title: {
-          text: `￥${amountAll}`,
-          left: 'center',
-          top: 'center'
-        },
-        series: [
-          {
-            type: 'pie',
-            data: optionData,
-            radius: ['40%', '70%'],
-            itemStyle: {
-              borderRadius: 5,
-              borderColor: '#fff',
-              borderWidth: 2
-            },
-          }
-        ]
-      })
+      if (chart == null) {
+        wx.nextTick(update)
+      } else {
+        chart.setOption({
+          title: {
+            text: `￥${amountAll}`,
+            left: 'center',
+            top: 'center'
+          },
+          series: [
+            {
+              type: 'pie',
+              data: optionData,
+              radius: ['40%', '70%'],
+              itemStyle: {
+                borderRadius: 5,
+                borderColor: '#fff',
+                borderWidth: 2
+              },
+            }
+          ]
+        })
+      }
     }
 
     wx.nextTick(update)
@@ -415,7 +453,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.getBillList()
+    if (wx.getStorageSync('token')) {
+      this.getBillList()
+    }
+    this.setData({
+      isInit: true
+    })
   },
 
   /**
@@ -429,14 +472,38 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    if (this.data.token != wx.getStorageSync('token')) {
+      this.setData({
+        isInit: false
+      })
+      Toast.loading({
+        forbidClick: true,
+        selector: '#chart-toast',
+        duration: 300
+      })
+      setTimeout(() => {
+        this.setData({
+          isInit: true
+        })
+      }, 500);
+    } else {
+      this.setData({
+        isInit: true
+      })
+    }
 
+    this.setData({
+      token: wx.getStorageSync('token')
+    })
+    if (this.data.token != '') {
+      this.getBillList()
+    }
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide() {
-
   },
 
   /**

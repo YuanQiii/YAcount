@@ -1,6 +1,7 @@
 // pages/info/info.js
 import { formatDate } from '../../utils/format_date'
 import { callCloudFunction } from '../../utils/cloud_helper'
+import Dialog from '../../miniprogram_npm/@vant/weapp/dialog/dialog';
 
 
 
@@ -22,13 +23,25 @@ Page({
     })
   },
   handleDelete() {
-    callCloudFunction('delBill', {
-      _id: this.data.info._id
-    }).then(res => {
-      wx.reLaunch({
-        url: '../detail/detail',
-      })
+
+    Dialog.confirm({
+      message: '确认删除账单？',
+      selector: '#info-dialog'
     })
+      .then(() => {
+        callCloudFunction('delBill', {
+          _id: this.data.info._id
+        }).then(res => {
+          wx.reLaunch({
+            url: '../detail/detail',
+          })
+        })
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+
   },
 
   getWeek(time) {
@@ -37,7 +50,7 @@ Page({
   },
 
   handleBillDate(datetime) {
-    let temp = formatDate(datetime, 'YY-MM-DD')
+    let temp = formatDate(datetime, 'YY/MM/DD')
     return `${temp} ${this.getWeek(datetime)}`
   },
 
@@ -49,7 +62,7 @@ Page({
     eventChannel && eventChannel.on && eventChannel.on('acceptDataFromDetailPage', data => {
       console.log(data.data)
       data.data.bill_date = this.handleBillDate(data.data.bill_date)
-      data.data.record_date = formatDate(data.data.record_date)
+      data.data.record_date = formatDate(data.data.record_date, "YY/MM/DD")
       this.setData({
         info: data.data
       })
